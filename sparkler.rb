@@ -32,7 +32,7 @@ class Sparkler
             value: value
           )
 
-          statistic.increment!(:counter) or puts "Error saving statistic: #{statistic.errors}"
+          Statistic.update_counters(statistic.id, counter: 1)
         end
 
         feed.contents ? success(feed.contents) : not_found
