@@ -10,6 +10,13 @@ class Feed < ActiveRecord::Base
   end
 
   def contents
-    @contents ||= open(url).read
+    unless @contents
+      puts "Reloading feed from #{url}..."
+      @contents = open(url).read
+    end
+
+    @contents
+  rescue OpenURI::HTTPError => error
+    puts "Couldn't download feed from #{url}: #{error}"
   end
 end

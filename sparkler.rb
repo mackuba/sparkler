@@ -35,7 +35,7 @@ class Sparkler
           statistic.increment!(:counter) or puts "Error saving statistic: #{statistic.errors}"
         end
 
-        success(feed.content)
+        feed.contents ? success(feed.contents) : not_found
       else
         not_found
       end
