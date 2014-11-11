@@ -1,38 +1,41 @@
-require 'open-uri'
-require 'mongo'
-require 'rack'
-
-FEEDS = {
-  'gitifier' => 'https://github.com/psionides/gitifier/raw/master/Sparkle/gitifier_appcast.xml'
-}
-
 class Sparkler
   def initialize
-    @feed_cache = {}
-    @db = Mongo::Connection.new.db("sparkler")
+    @feeds = {}
+    @properties = {}
   end
 
   def call(env)
     request = Rack::Request.new(env)
 
     if request.path_info =~ %r(^/feed/(\w+)$)
-      app = $1
-      if FEEDS[app]
-        month = Time.now.strftime "%Y-%m"
-        request.params['userAgent'] = env["HTTP_USER_AGENT"].to_s.split(/\//).first
-        request.params.delete('appName')
-        request.params.each do |field, value|
-          value = value.gsub(/\./, '_')
-          @db.collection(app).update(
-            { '_field' => field, '_month' => month },
-            { '$inc' => { value => 1 }},
-            :upsert => true
+      feed_name = $1
+      @feeds[feed_name] = Feed.find_by_name(feed_name) unless @feeds.has_key?(feed_name)
+      feed = @feeds[feed_name]
+
+      if feed
+        now = Time.now
+        year, month = now.year, now.month
+
+        params = request.params.clone
+        params['userAgent'] = env["HTTP_USER_AGENT"].to_s.split(/\//).first
+        params.delete('appName')
+
+        params.each do |property_name, value_name|
+          property = @properties[property_name] ||= Property.find_or_create_by(name: property_name)
+          value = property.values.detect { |v| v.name == value_name } || property.values.create(name: value_name)
+
+          statistic = Statistic.find_or_create_by(
+            year: year,
+            month: month,
+            feed: feed,
+            property: property,
+            value: value
           )
+
+          statistic.increment!(:counter) or puts "Error saving statistic: #{statistic.errors}"
         end
 
-        @feed_cache[app] = open(FEEDS[app]).read unless @feed_cache[app]
-
-        success @feed_cache[app]
+        success(feed.content)
       else
         not_found
       end

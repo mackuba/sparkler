@@ -1,0 +1,8 @@
+development:
+  adapter: mysql2
+  database: sparkler_development
+  host: 127.0.0.1
+  username: root
+  password: 
+  socket: /tmp/mysql.sock
+  encoding: utf8

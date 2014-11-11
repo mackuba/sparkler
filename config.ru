@@ -1,6 +1,5 @@
-require 'sparkler'
-require 'bundler'
-Bundler.setup(:default)
+require_relative 'init'
+require 'rack'
 
 run Sparkler.new
 puts "Sparkler is online."
