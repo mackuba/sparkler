@@ -49,6 +49,6 @@ class Sparkler
   end
 
   def not_found
-    Rack::Response.new("", 404).to_a
+    Rack::Response.new("Not found :-(", 404).to_a
   end
 end
