@@ -7,7 +7,7 @@ class Sparkler
   def call(env)
     request = Rack::Request.new(env)
 
-    if request.path_info =~ %r(^/feed/(\w+)$)
+    if request.path_info =~ %r(^/feed/([\w\-\.]+)$)
       feed_name = $1
       @feeds[feed_name] = Feed.find_by_name(feed_name) unless @feeds.has_key?(feed_name)
       feed = @feeds[feed_name]
