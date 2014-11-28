@@ -1,5 +1,3 @@
-require_relative '../../init'
-
 class InitialTables < ActiveRecord::Migration
   def change
     create_table :feeds do |t|
@@ -25,8 +23,4 @@ class InitialTables < ActiveRecord::Migration
 
     add_index :statistics, [:feed_id, :year, :month, :property_id, :value_id], unique: true, name: 'stats_index'
   end 
-end
-
-if __FILE__ == $0
-  InitialTables.migrate(ARGV[0] ? ARGV[0].to_sym : :up)
 end
