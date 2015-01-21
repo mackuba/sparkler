@@ -1,5 +1,4 @@
-require File.expand_path('../init', __FILE__)
-require 'rack'
+# This file is used by Rack-based servers to start the application.
 
-run Sparkler.new
-puts "Sparkler is online."
+require ::File.expand_path('../config/environment', __FILE__)
+run Rails.application

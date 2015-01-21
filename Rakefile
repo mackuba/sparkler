@@ -1,13 +1,6 @@
-require_relative 'init'
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
-namespace :db do
-  task :migrate do
-    ActiveRecord::Migrator.migrations_paths = ['db/migrate']
-    ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, nil)
-  end
+require File.expand_path('../config/application', __FILE__)
 
-  task :rollback do
-    ActiveRecord::Migrator.migrations_paths = ['db/migrate']
-    ActiveRecord::Migrator.rollback(ActiveRecord::Migrator.migrations_paths, 1)
-  end
-end
+Rails.application.load_tasks
