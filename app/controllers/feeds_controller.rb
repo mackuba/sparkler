@@ -15,8 +15,26 @@ class FeedsController < ApplicationController
     end
   end
 
+  def new
+    @feed = Feed.new
+  end
+
+  def create
+    @feed = Feed.new(feed_params)
+
+    if @feed.save
+      redirect_to feeds_path, notice: 'Feed was successfully created.'
+    else
+      render :new
+    end
+  end
+
 
   private
+
+  def feed_params
+    params.require(:feed).permit(:title, :name, :url)
+  end
 
   def request_from_sparkle?
     request.user_agent.present? && request.user_agent =~ %r(Sparkle/)

@@ -1,4 +1,7 @@
 <table border>
+  <tr>
+    <td><%= link_to "Add new feed…", new_feed_path %></td>
+  </tr>
   <% @feeds.each do |feed| %>
     <tr>
       <td><%= feed.title %></td>

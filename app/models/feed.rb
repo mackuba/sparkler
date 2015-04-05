@@ -4,6 +4,8 @@ class Feed < ActiveRecord::Base
   has_many :statistics
   validates_presence_of :title, :name, :url
 
+  after_create :add_to_list
+
   def self.all_feeds
     @@feeds ||= Feed.all.to_a
   end
@@ -16,6 +18,14 @@ class Feed < ActiveRecord::Base
   def title=(title)
     write_attribute :name, title.downcase.gsub(/\W+/, '_') if title
     write_attribute :title, title
+  end
+
+  def to_param
+    name
+  end
+
+  def add_to_list
+    self.class.all_feeds << self
   end
 
   def contents
