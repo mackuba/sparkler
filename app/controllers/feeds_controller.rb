@@ -1,4 +1,8 @@
 class FeedsController < ApplicationController
+  def index
+    @feeds = Feed.all_feeds
+  end
+
   def show
     @feed = Feed.get_by_name(params[:id])
 
