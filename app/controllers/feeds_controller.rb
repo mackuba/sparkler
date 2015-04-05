@@ -1,11 +1,11 @@
 class FeedsController < ApplicationController
+  before_action :set_feed, only: [:show, :reload]
+
   def index
     @feeds = Feed.all_feeds
   end
 
   def show
-    @feed = Feed.get_by_name(params[:id])
-
     save_statistics(@feed) if request_from_sparkle?
 
     if @feed.contents
@@ -13,6 +13,13 @@ class FeedsController < ApplicationController
     else
       head :not_found
     end
+  end
+
+  def reload
+    @feed.reload
+    redirect_to feeds_path
+  rescue Exception
+    redirect_to feeds_path
   end
 
   def new
@@ -34,6 +41,10 @@ class FeedsController < ApplicationController
 
   def feed_params
     params.require(:feed).permit(:title, :name, :url)
+  end
+
+  def set_feed
+    @feed = Feed.get_by_name(params[:id])
   end
 
   def request_from_sparkle?

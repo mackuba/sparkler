@@ -4,7 +4,25 @@
   </tr>
   <% @feeds.each do |feed| %>
     <tr>
-      <td><%= feed.title %></td>
+      <td>
+        <%= feed.title %><br>
+        <%= link_to feed_path(feed), feed %><br>
+
+        <% if feed.loaded? %>
+          <% if feed.last_version %>
+            Last version: <%= feed.last_version %>
+          <% else %>
+            Status: XML parsing error
+          <% end %>
+        <% elsif feed.load_error %>
+          Status: <%= feed.load_error %>
+        <% else %>
+          Last version: not loaded yet
+        <% end %>
+        <br>
+        
+        <%= link_to "Reload", reload_feed_path(feed) %>
+      </td>
     </tr>
   <% end %>
 </table>

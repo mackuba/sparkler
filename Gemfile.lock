@@ -146,6 +146,7 @@ DEPENDENCIES
   byebug
   capistrano (~> 2.4)
   mysql2
+  nokogiri
   rails (= 4.2.0)
   sass-rails (~> 5.0)
   spring

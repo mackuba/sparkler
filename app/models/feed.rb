@@ -6,6 +6,8 @@ class Feed < ActiveRecord::Base
 
   after_create :add_to_list
 
+  attr_reader :last_version, :load_error
+
   def self.all_feeds
     @@feeds ||= Feed.all.to_a
   end
@@ -32,11 +34,30 @@ class Feed < ActiveRecord::Base
     unless @contents
       puts "Reloading feed from #{url}..."
       @contents = open(url).read
+      @last_version = version_from_contents(@contents)
+      @load_error = nil
     end
 
     @contents
   rescue OpenURI::HTTPError => error
     puts "Couldn't download feed from #{url}: #{error}"
+    @load_error = error
+  end
+
+  def loaded?
+    @contents.present?
+  end
+
+  def reload
+    @contents = nil
+    contents
+  end
+
+  def version_from_contents(contents)
+    xml = Nokogiri::XML(contents)
+    first_item = xml.css('item').first
+    enclosure = first_item && first_item.css('enclosure').first
+    enclosure && enclosure['sparkle:version']
   end
 
   def save_params(timestamp, params)
