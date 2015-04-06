@@ -21,7 +21,7 @@
         <% end %>
         <br>
         
-        <%= link_to "Reload", reload_feed_path(feed) %>
+        <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed)) %>
       </td>
     </tr>
   <% end %>
