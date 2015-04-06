@@ -1,5 +1,10 @@
 class FeedReport
   PROPERTIES = {
+    'osVersion' => {
+      :title => 'OS Version',
+      :group_by => lambda { |v| v.split('.').first(2).join('.') },
+      :sort_by => lambda { |v| v.split('.').map(&:to_i) }
+    },
     'model' => {
       :title => 'Mac Model'
     },
@@ -27,7 +32,8 @@ class FeedReport
       :title => 'Amount of RAM [MB]'
     },
     'appVersionShort' => {
-      :title => 'App Version'
+      :title => 'App Version',
+      :sort_by => lambda { |v| v.split('.').map(&:to_i) }
     },
     'lang' => {
       :title => 'Locale'
@@ -43,20 +49,7 @@ class FeedReport
     @properties = PROPERTIES.map { |name, data| [data[:title], Property.find_or_create_by(name: name)] }
 
     calculate_stats
-
-    @values = @properties.map(&:last).reduce({}) do |list, property|
-      value_title_map = PROPERTIES[property.name][:values]
-
-      value_list = property.values.map do |value|
-        title = value_title_map && value_title_map[value.name] || value.name
-        counts = @months.map { |y, m| count_for(property, value, y, m) }
-        counts.sum > 0 ? [title, counts] : nil
-      end
-
-      sorted_list = value_list.compact.sort_by { |title, counts| [title.to_i, title.downcase] }
-
-      list.update(property => sorted_list)
-    end
+    calculate_values
   end
 
   def calculate_stats
@@ -70,11 +63,40 @@ class FeedReport
     end
   end
 
-  def count_for(property, value, year, month)
-    property_stats = @stats[property.id] || {}
-    value_stats = property_stats[value.id] || {}
+  def count_for(property_id, value_id, year, month)
+    property_stats = @stats[property_id] || {}
+    value_stats = property_stats[value_id] || {}
     year_stats = value_stats[year] || {}
     year_stats[month] || 0
+  end
+
+  def calculate_values
+    @values = {}
+
+    @properties.each do |title, property|
+      value_title_map = PROPERTIES[property.name][:values]
+      grouping = PROPERTIES[property.name][:group_by]
+      sorting = PROPERTIES[property.name][:sort_by] || lambda { |title| [title.to_i, title.downcase] }
+
+      value_ids_for_title = {}
+
+      property.values.each do |value|
+        title = value_title_map && value_title_map[value.name] || value.name
+        grouped_title = grouping ? grouping.call(title) : title
+        value_ids_for_title[grouped_title] ||= []
+        value_ids_for_title[grouped_title] << value.id
+      end
+
+      data_lines = value_ids_for_title.keys.sort_by(&sorting).map do |title|
+        counts = @months.map do |y, m|
+          value_ids_for_title[title].sum { |value_id| count_for(property.id, value_id, y, m) }
+        end
+
+        [title, counts]
+      end
+
+      @values[property] = data_lines.reject { |title, counts| counts.sum == 0 }
+    end
   end
 
   def values_for_property(property)
