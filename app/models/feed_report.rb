@@ -81,10 +81,10 @@ class FeedReport
       value_ids_for_title = {}
 
       property.values.each do |value|
-        title = value_title_map && value_title_map[value.name] || value.name
-        grouped_title = grouping ? grouping.call(title) : title
-        value_ids_for_title[grouped_title] ||= []
-        value_ids_for_title[grouped_title] << value.id
+        title = grouping.call(value.name)
+        processed_title = value_title_map && value_title_map[title] || title
+        value_ids_for_title[processed_title] ||= []
+        value_ids_for_title[processed_title] << value.id
       end
 
       data_lines = value_ids_for_title.keys.sort_by(&sorting).map do |title|
