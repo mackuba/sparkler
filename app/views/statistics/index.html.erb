@@ -1,29 +1,23 @@
 <h1>Statistics for <%= @feed.title %></h1>
 
-<% @properties.each do |title, property| %>
-  <h2><%= title %></h2>
+<% @report.properties.each do |property_title, property| %>
+  <h2><%= property_title %></h2>
   
-  <% if property %>
-    <% stats = @feed.statistics.where(property: property) %>
-    <table border>
+  <% stats = @feed.statistics.where(property: property) %>
+  <table border>
+    <tr>
+      <th></th>
+      <% @report.months.each do |year, month| %>
+        <th><%= "#{month}/#{year}" %></th>
+      <% end %>
+    </tr>
+    <% @report.values_for_property(property).each do |value_title, counts| %>
       <tr>
-        <td>Month</td>
-        <% @months.each do |year, month| %>
-          <th><%= "#{month}/#{year}" %></th>
+        <td><%= value_title %></td>
+        <% counts.each do |count| %>
+          <td><%= count %></td>
         <% end %>
       </tr>
-      <% property.values.each do |value| %>
-        <tr>
-          <td><%= Value::HUMAN_READABLE_NAMES[property.name].try(:[], value.name) || value.name %></td>
-          <% @months.each do |year, month| %>
-            <td>
-              <%= stats.detect { |s| s.value_id == value.id && s.year == year && s.month == month }.try(:counter) || 0 %>
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
-    </table>
-  <% else %>
-    <p>No data.</p>
-  <% end %>
+    <% end %>
+  </table>
 <% end %>
