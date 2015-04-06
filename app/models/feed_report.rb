@@ -10,9 +10,6 @@ class FeedReport
         '18' => 'PowerPC'
       }
     },
-    'cpusubtype' => {
-      :title => 'CPU subtype'
-    },
     'cpu64bit' => {
       :title => 'CPU Bits',
       :values => {
@@ -22,6 +19,15 @@ class FeedReport
     },
     'ncpu' => {
       :title => 'Number of CPUs'
+    },
+    'cpuFreqMHz' => {
+      :title => 'CPU Frequency [MHz]'
+    },
+    'ramMB' => {
+      :title => 'Amount of RAM [MB]'
+    },
+    'appVersionShort' => {
+      :title => 'App Version'
     },
     'lang' => {
       :title => 'Locale'
