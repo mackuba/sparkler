@@ -1,55 +1,53 @@
 class FeedReport
-  PROPERTIES = {
-    'osVersion' => {
-      :title => 'OS Version',
+  REPORTS = {
+    'OS Version' => {
+      :field => 'osVersion',
       :group_by => lambda { |v| v.split('.').first(2).join('.') },
       :sort_by => lambda { |v| v.split('.').map(&:to_i) }
     },
-    'model' => {
-      :title => 'Mac Model'
+    'Mac Model' => {
+      :field => 'model'
     },
-    'cputype' => {
-      :title => 'CPU Type',
+    'CPU Type' => {
+      :field => 'cputype',
       :values => {
         '7' => 'Intel',
         '18' => 'PowerPC'
       }
     },
-    'cpu64bit' => {
-      :title => 'CPU Bits',
+    'CPU Bits' => {
+      :field => 'cpu64bit',
       :values => {
         '0' => '32-bit',
         '1' => '64-bit'
       }
     },
-    'ncpu' => {
-      :title => 'Number of CPUs'
+    'Number of CPUs' => {
+      :field => 'ncpu'
     },
-    'cpuFreqMHz' => {
-      :title => 'CPU Frequency [MHz]'
+    'CPU Frequency [MHz]' => {
+      :field => 'cpuFreqMHz'
     },
-    'ramMB' => {
-      :title => 'Amount of RAM [MB]'
+    'Amount of RAM [MB]' => {
+      :field => 'ramMB'
     },
-    'appVersionShort' => {
-      :title => 'App Version',
+    'App Version' => {
+      :field => 'appVersionShort',
       :sort_by => lambda { |v| v.split('.').map(&:to_i) }
     },
-    'lang' => {
-      :title => 'Locale'
+    'Locale' => {
+      :field => 'lang'
     }
   }
 
-  attr_reader :months, :properties
+  attr_reader :months, :reports
 
   def initialize(feed)
     @feed = feed
-
     @months = feed.statistics.select('DISTINCT year, month').order('year, month').map { |r| [r.year, r.month] }
-    @properties = PROPERTIES.map { |name, data| [data[:title], Property.find_or_create_by(name: name)] }
 
     calculate_stats
-    calculate_values
+    generate_reports
   end
 
   def calculate_stats
@@ -70,13 +68,15 @@ class FeedReport
     year_stats[month] || 0
   end
 
-  def calculate_values
-    @values = {}
+  def generate_reports
+    @reports = {}
 
-    @properties.each do |title, property|
-      value_title_map = PROPERTIES[property.name][:values]
-      grouping = PROPERTIES[property.name][:group_by]
-      sorting = PROPERTIES[property.name][:sort_by] || lambda { |title| [title.to_i, title.downcase] }
+    REPORTS.each do |report_title, options|
+      property = Property.find_or_create_by(name: options[:field])
+
+      value_title_map = options[:values]
+      grouping = options[:group_by] || lambda { |title| title }
+      sorting = options[:sort_by] || lambda { |title| [title.to_i, title.downcase] }
 
       value_ids_for_title = {}
 
@@ -95,11 +95,7 @@ class FeedReport
         [title, counts]
       end
 
-      @values[property] = data_lines.reject { |title, counts| counts.sum == 0 }
+      @reports[report_title] = data_lines.reject { |title, counts| counts.sum == 0 }
     end
-  end
-
-  def values_for_property(property)
-    @values[property]
   end
 end

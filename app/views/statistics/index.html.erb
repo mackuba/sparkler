@@ -1,9 +1,8 @@
 <h1>Statistics for <%= @feed.title %></h1>
 
-<% @report.properties.each do |property_title, property| %>
-  <h2><%= property_title %></h2>
+<% @report.reports.each do |report_title, data| %>
+  <h2><%= report_title %></h2>
   
-  <% stats = @feed.statistics.where(property: property) %>
   <table border>
     <tr>
       <th></th>
@@ -11,7 +10,7 @@
         <th><%= "#{month}/#{year}" %></th>
       <% end %>
     </tr>
-    <% @report.values_for_property(property).each do |value_title, counts| %>
+    <% data.each do |value_title, counts| %>
       <tr>
         <td><%= value_title %></td>
         <% counts.each do |count| %>
