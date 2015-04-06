@@ -1,10 +1,10 @@
 class FeedReport
   PROPERTIES = {
     'model' => {
-      :title => 'Mac model'
+      :title => 'Mac Model'
     },
     'cputype' => {
-      :title => 'CPU type',
+      :title => 'CPU Type',
       :values => {
         '7' => 'Intel',
         '18' => 'PowerPC'
@@ -14,7 +14,7 @@ class FeedReport
       :title => 'CPU subtype'
     },
     'cpu64bit' => {
-      :title => 'CPU bits',
+      :title => 'CPU Bits',
       :values => {
         '0' => '32-bit',
         '1' => '64-bit'
