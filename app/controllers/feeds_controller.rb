@@ -19,8 +19,6 @@ class FeedsController < ApplicationController
   end
 
   def save_statistics(feed)
-    now = Time.now
-    feed.save_params(now, request.params)
-    feed.save_param(now, 'appVersionShort', request.user_agent.split(' ').first.split('/').last)
+    feed.save_params(Time.now, request.params, request.user_agent)
   end
 end
