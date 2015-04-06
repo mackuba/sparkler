@@ -47,7 +47,9 @@ class FeedReport
         counts.sum > 0 ? [title, counts] : nil
       end
 
-      list.update(property => value_list.compact)
+      sorted_list = value_list.compact.sort_by { |title, counts| [title.to_i, title.downcase] }
+
+      list.update(property => sorted_list)
     end
   end
 
