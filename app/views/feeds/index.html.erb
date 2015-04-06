@@ -5,7 +5,7 @@
   <% @feeds.each do |feed| %>
     <tr>
       <td>
-        <%= feed.title %><br>
+        <%= link_to feed.title, feed_statistics_path(feed) %><br>
         <%= link_to feed_path(feed), feed %><br>
 
         <% if feed.loaded? %>

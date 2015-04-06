@@ -60,6 +60,10 @@ class Feed < ActiveRecord::Base
     enclosure && enclosure['sparkle:version']
   end
 
+  def months_with_data
+    statistics.select('DISTINCT year, month').order('year, month').map { |r| [r.year, r.month] }
+  end
+
   def save_params(timestamp, params)
     params = params.clone
     params.delete('appName')

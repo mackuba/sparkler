@@ -1,0 +1,29 @@
+<h1>Statistics for <%= @feed.title %></h1>
+
+<% @properties.each do |title, property| %>
+  <h2><%= title %></h2>
+  
+  <% if property %>
+    <% stats = @feed.statistics.where(property: property) %>
+    <table border>
+      <tr>
+        <td>Month</td>
+        <% @months.each do |year, month| %>
+          <th><%= "#{month}/#{year}" %></th>
+        <% end %>
+      </tr>
+      <% property.values.each do |value| %>
+        <tr>
+          <td><%= value.name %></td>
+          <% @months.each do |year, month| %>
+            <td>
+              <%= stats.detect { |s| s.value_id == value.id && s.year == year && s.month == month }.try(:counter) || 0 %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    <p>No data.</p>
+  <% end %>
+<% end %>
