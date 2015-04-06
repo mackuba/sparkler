@@ -5,6 +5,16 @@ class FeedReport
       :group_by => lambda { |v| v.split('.').first(2).join('.') },
       :sort_by => lambda { |v| v.split('.').map(&:to_i) }
     },
+    'Mac Class' => {
+      :field => 'model',
+      :group_by => lambda { |v| v[/^[[:alpha:]]+/] },
+      :values => {
+        'MacBookAir' => 'MacBook Air',
+        'MacBookPro' => 'MacBook Pro',
+        'Macmini' => 'Mac Mini',
+        'MacPro' => 'Mac Pro'
+      }
+    },
     'Mac Model' => {
       :field => 'model'
     },
