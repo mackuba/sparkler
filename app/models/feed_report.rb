@@ -35,8 +35,19 @@ class FeedReport
     'Number of CPUs' => {
       :field => 'ncpu'
     },
-    'CPU Frequency [MHz]' => {
-      :field => 'cpuFreqMHz'
+    'CPU Frequency' => {
+      :field => 'cpuFreqMHz',
+      :group_by => lambda { |v|
+        mhz = v.to_i
+        
+        case mhz
+        when 0...1500 then "< 1.5 GHz"
+        when 1500...2000 then "1.5-1.9 GHz"
+        when 2000...2500 then "2.0-2.4 GHz"
+        when 2500...3000 then "2.5-2.9 GHz"
+        else "3.0+ GHz"
+        end
+      }
     },
     'Amount of RAM [MB]' => {
       :field => 'ramMB'
