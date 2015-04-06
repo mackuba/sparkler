@@ -60,13 +60,20 @@ class Feed < ActiveRecord::Base
     enclosure && enclosure['sparkle:version']
   end
 
-  def save_params(timestamp, params)
+  def save_params(timestamp, params, user_agent)
     params = params.clone
     params.delete('appName')
+    params.delete('controller')
+    params.delete('action')
+    params.delete('id')
+    subtype = params.delete('cpusubtype')
 
     params.each do |property_name, value_name|
       save_param(timestamp, property_name, value_name)
     end
+
+    save_param(timestamp, 'appVersionShort', user_agent.split(' ').first.split('/').last)
+    save_param(timestamp, 'cpusubtype', "#{params['cputype']}.#{subtype}") if subtype
   end
 
   def save_param(timestamp, property_name, value_name)
