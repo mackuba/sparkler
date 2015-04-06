@@ -14,7 +14,7 @@
       </tr>
       <% property.values.each do |value| %>
         <tr>
-          <td><%= value.name %></td>
+          <td><%= Value::HUMAN_READABLE_NAMES[property.name].try(:[], value.name) || value.name %></td>
           <% @months.each do |year, month| %>
             <td>
               <%= stats.detect { |s| s.value_id == value.id && s.year == year && s.month == month }.try(:counter) || 0 %>
