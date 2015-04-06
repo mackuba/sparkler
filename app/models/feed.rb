@@ -32,6 +32,9 @@ class Feed < ActiveRecord::Base
   def save_params(timestamp, params, user_agent)
     params = params.clone
     params.delete('appName')
+    params.delete('controller')
+    params.delete('action')
+    params.delete('id')
     subtype = params.delete('cpusubtype')
 
     params.each do |property_name, value_name|
