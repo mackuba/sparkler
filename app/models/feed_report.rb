@@ -25,6 +25,13 @@ class FeedReport
         '18' => 'PowerPC'
       }
     },
+    'CPU Subtype' => {
+      :field => 'cpusubtype',
+      :values => {
+        '7.4' => 'X86_ARCH1',
+        '7.8' => 'X86_64_H (Haswell)'
+      }
+    },
     'CPU Bits' => {
       :field => 'cpu64bit',
       :values => {
