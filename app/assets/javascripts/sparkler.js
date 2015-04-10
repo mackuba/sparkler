@@ -38,23 +38,32 @@ $.formatPercent = function(value) {
       var context = canvas.getContext('2d');
 
       var chartData = chartDataFromJSON(json);
+      var percents = (json.series[0][0] !== "Downloads");
+      var showLabel = (json.series[0][0] !== "Downloads");
+
       var options = {
         animation: false,
         datasetFill: false,
-        multiTooltipTemplate: "<%= datasetLabel %> – <%= $.formatPercent(value) %>",
+        multiTooltipTemplate: "<%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
         pointHitDetectionRadius: 5,
         scaleBeginAtZero: true,
-        scaleLabel: "<%= value %>%",
-        tooltipTemplate: "<%= label %>: <%= datasetLabel %> – <%= $.formatPercent(value) %>",
+        scaleLabel: "<%= value %>" + (percents ? "%" : ""),
+        tooltipTemplate: (
+          showLabel ?
+          "<%= label %>: <%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>") :
+          "<%= label %>: " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>")
+        ),
       };
 
       var chart = new Chart(context).Line(chartData, options);
 
-      var legend = script.nextElementSibling;
-      if (legend && legend.tagName === 'DIV' && legend.className === 'legend') {
-        legend.innerHTML = chart.generateLegend();
-      } else {
-        $.log('Error: no legend element found.');
+      if (showLabel) {
+        var legend = script.nextElementSibling;
+        if (legend && legend.tagName === 'DIV' && legend.className === 'legend') {
+          legend.innerHTML = chart.generateLegend();
+        } else {
+          $.log('Error: no legend element found.');
+        }
       }
     } else {
       $.log('Error: no data found for canvas.');
@@ -77,7 +86,7 @@ $.formatPercent = function(value) {
 
         return {
           label: s[0],
-          data: s[2],
+          data: s[0] === "Downloads" ? s[1] : s[2],
           strokeColor: color,
           pointColor: color,
           pointStrokeColor: "#fff",

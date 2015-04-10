@@ -1,5 +1,9 @@
 class FeedReport
   REPORTS = {
+    'Total downloads' => {
+      :field => 'osVersion',
+      :group_by => lambda { |v| "Downloads" }
+    },
     'OS Version' => {
       :field => 'osVersion',
       :group_by => lambda { |v| v.split('.').first(2).join('.') },

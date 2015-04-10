@@ -3,6 +3,11 @@
 <% @report.reports.each do |report_title| %>
   <h2 class="report"><%= report_title %></h2>
 
+  <% if report_title == "Total downloads" %>
+    <p class="report-info">Only requests that include system profile info are included (submitted once
+      a week on average and only for users who explicitly agreed).</p>
+  <% end %>
+
   <canvas class="report"></canvas>
 
   <script type="application/json">
