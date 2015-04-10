@@ -9,7 +9,9 @@ $.log = function(text) {
 };
 
 $.formatPercent = function(value) {
-  return Math.floor(value) + '.' + (value - Math.floor(value)).toString().substr(2, 1) + '%';
+  var int = Math.floor(value);
+  var rest = value - int;
+  return int + '.' + (rest > 0 ? rest.toString().substr(2, 1) : '0') + '%';
 };
 
 (function() {
