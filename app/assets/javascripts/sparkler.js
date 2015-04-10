@@ -1,3 +1,17 @@
+function $(selector) {
+  return Array.prototype.slice.apply(document.querySelectorAll(selector));
+}
+
+$.log = function(text) {
+  if (console.log) {
+    console.log(text);
+  }
+};
+
+$.formatPercent = function(value) {
+  return Math.floor(value) + '.' + (value - Math.floor(value)).toString().substr(2, 1) + '%';
+};
+
 (function() {
   // initialization
 
@@ -25,21 +39,31 @@
       var options = {
         animation: false,
         datasetFill: false,
-        multiTooltipTemplate: "<%= datasetLabel %> – <%= value %>",
+        multiTooltipTemplate: "<%= datasetLabel %> – <%= $.formatPercent(value) %>",
         pointHitDetectionRadius: 5,
         scaleBeginAtZero: true,
-        tooltipTemplate: "<%= label %>: <%= datasetLabel %> – <%= value %>",
+        scaleLabel: "<%= value %>%",
+        tooltipTemplate: "<%= label %>: <%= datasetLabel %> – <%= $.formatPercent(value) %>",
       };
 
       var chart = new Chart(context).Line(chartData, options);
-      // console.log(chart.generateLegend());
+      // $.log(chart.generateLegend());
     } else {
-      log('Error: no data found for canvas.');
+      $.log('Error: no data found for canvas.');
     }
   }
 
   function chartDataFromJSON(json) {
     var index = -1;
+
+    var totals = [];
+    for (var i = 0; i < json.months.length; i++) {
+      var sum = 0;
+      for (var s = 0; s < json.series.length; s++) {
+        sum += json.series[s][1][i];
+      }
+      totals.push(Math.max(sum, 1));
+    }
 
     return {
       labels: json.months.map(function(m) {
@@ -52,7 +76,7 @@
 
         return {
           label: s[0],
-          data: s[1],
+          data: s[1].map(function(d, i) { return d * 100 / totals[i] }),
           strokeColor: color,
           pointColor: color,
           pointStrokeColor: "#fff",
@@ -61,18 +85,5 @@
         };
       })
     };
-  }
-
-
-  // utilities
-
-  function $(selector) {
-    return Array.prototype.slice.apply(document.querySelectorAll(selector));
-  }
-
-  function log(text) {
-    if (console.log) {
-      console.log(text);
-    }
   }
 })();
