@@ -31,10 +31,10 @@ $.formatPercent = function(value) {
   // charts
 
   function createReport(canvas) {
-    var next = canvas.nextElementSibling;
+    var script = canvas.nextElementSibling;
 
-    if (next && next.tagName === 'SCRIPT' && next.getAttribute('type') === 'application/json') {
-      var json = JSON.parse(next.innerText);
+    if (script && script.tagName === 'SCRIPT' && script.getAttribute('type') === 'application/json') {
+      var json = JSON.parse(script.innerText);
       var context = canvas.getContext('2d');
 
       var chartData = chartDataFromJSON(json);
@@ -49,7 +49,13 @@ $.formatPercent = function(value) {
       };
 
       var chart = new Chart(context).Line(chartData, options);
-      // $.log(chart.generateLegend());
+
+      var legend = script.nextElementSibling;
+      if (legend && legend.tagName === 'DIV' && legend.className === 'legend') {
+        legend.innerHTML = chart.generateLegend();
+      } else {
+        $.log('Error: no legend element found.');
+      }
     } else {
       $.log('Error: no data found for canvas.');
     }
