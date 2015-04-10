@@ -148,7 +148,26 @@ class FeedReport
       end
 
       data_lines.delete_if { |title, counts, normalized| counts.sum == 0 }
-      data_lines.delete_if { |title, counts, normalized| normalized.max < options[:threshold] } if options[:threshold]
+
+      if options[:threshold]
+        other = []
+
+        data_lines.clone.each do |dataset|
+          title, counts, normalized = dataset
+          if normalized.max < options[:threshold]
+            data_lines.delete(dataset)
+            other.push(dataset)
+          end
+        end
+        
+        other_dataset = [
+          "Other",
+          other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[1][i] }; sum },
+          other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[2][i] }; sum }
+        ]
+        
+        data_lines.push(other_dataset)
+      end
 
       @reports[report_title] = data_lines
     end

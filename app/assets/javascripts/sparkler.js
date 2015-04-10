@@ -73,7 +73,7 @@ $.formatPercent = function(value) {
       datasets: json.series.map(function(s) {
         index += 1;
         var hue = 360 / json.series.length * index;
-        var color = "hsl(" + hue + ", 70%, 60%)";
+        var color = s[0] === "Other" ? "#888" : "hsl(" + hue + ", 70%, 60%)";
 
         return {
           label: s[0],
