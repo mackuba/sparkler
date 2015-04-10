@@ -43,6 +43,7 @@ $.formatPercent = function(value) {
 
       var options = {
         animation: false,
+        bezierCurve: false,
         datasetFill: false,
         multiTooltipTemplate: "<%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
         pointHitDetectionRadius: 5,
