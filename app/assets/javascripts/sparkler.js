@@ -65,9 +65,11 @@ $.formatPercent = function(value) {
       totals.push(Math.max(sum, 1));
     }
 
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
     return {
       labels: json.months.map(function(m) {
-        return m[1] + '/' + m[0].toString().substring(2);
+        return months[m[1] - 1] + " " + m[0].toString().substring(2);
       }),
       datasets: json.series.map(function(s) {
         index += 1;
