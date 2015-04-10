@@ -1,22 +1,11 @@
-<h1>Statistics for <%= @feed.title %></h1>
+<h1><%= @feed.title %> feed statistics</h1>
 
-<% @report.reports.each do |report_title, data| %>
-  <h2><%= report_title %></h2>
-  
-  <table border>
-    <tr>
-      <th></th>
-      <% @report.months.each do |year, month| %>
-        <th><%= "#{month}/#{year}" %></th>
-      <% end %>
-    </tr>
-    <% data.each do |value_title, counts| %>
-      <tr>
-        <td><%= value_title %></td>
-        <% counts.each do |count| %>
-          <td><%= count %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </table>
+<% @report.reports.each do |report_title| %>
+  <h2 class="report"><%= report_title %></h2>
+
+  <canvas class="report"></canvas>
+
+  <script type="application/json">
+    <%== @report.data_for_report(report_title).to_json %>
+  </script>
 <% end %>

@@ -1,28 +1,24 @@
-<table border>
-  <tr>
-    <td><%= link_to "Add new feed…", new_feed_path %></td>
-  </tr>
-  <% @feeds.each do |feed| %>
-    <tr>
-      <td>
-        <%= link_to feed.title, feed_statistics_path(feed) %><br>
-        <%= link_to feed_path(feed), feed %><br>
+<h1>Feeds at <%= request.host %></h1>
 
-        <% if feed.loaded? %>
-          <% if feed.last_version %>
-            Last version: <%= feed.last_version %>
-          <% else %>
-            Status: XML parsing error
-          <% end %>
-        <% elsif feed.load_error %>
-          Status: <%= feed.load_error %>
-        <% else %>
-          Last version: not loaded yet
-        <% end %>
-        <br>
-        
-        <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed)) %>
-      </td>
-    </tr>
-  <% end %>
-</table>
+<% @feeds.each do |feed| %>
+  <section class="feed">
+    <h2><%= link_to feed.title, feed_statistics_path(feed) %></h2>
+    <h3><%= link_to feed_url(feed), feed %></h3>
+
+    <% if feed.loaded? %>
+      <% if feed.last_version %>
+        <p class="status ok">Last version: <%= feed.last_version %></p>
+      <% else %>
+        <p class="status error">Status: XML parsing error</p>
+      <% end %>
+    <% elsif feed.load_error %>
+      <p class="status error">Status: <%= feed.load_error %></p>
+    <% else %>
+      <p class="status unknown">Last version: not loaded yet</p>
+    <% end %>
+    
+    <!-- <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed)) %> -->
+  </section>
+<% end %>
+
+<p class="command"><%= link_to "Add new feed…", new_feed_path %></p>

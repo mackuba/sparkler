@@ -68,8 +68,6 @@ class FeedReport
     }
   }
 
-  attr_reader :months, :reports
-
   def initialize(feed)
     @feed = feed
     @months = feed.statistics.select('DISTINCT year, month').order('year, month').map { |r| [r.year, r.month] }
@@ -125,5 +123,16 @@ class FeedReport
 
       @reports[report_title] = data_lines.reject { |title, counts| counts.sum == 0 }
     end
+  end
+
+  def reports
+    @reports.keys
+  end
+
+  def data_for_report(title)
+    {
+      months: @months,
+      series: @reports[title]
+    }
   end
 end

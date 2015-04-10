@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Sparkler</title>
-  <%= stylesheet_link_tag    'application', media: 'all' %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Sparkler statistics</title>
 
-<%= yield %>
+    <%= stylesheet_link_tag 'application' %>
+    <%= javascript_include_tag 'application' %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <nav class="left">
+      <% unless params[:controller] == 'feeds' && params[:action] = 'index' %>
+        <%= link_to "< Home", feeds_path %>
+      <% end %>
+    </nav>
 
-</body>
+    <%= yield %>
+  </body>
 </html>
