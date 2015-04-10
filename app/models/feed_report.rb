@@ -16,7 +16,8 @@ class FeedReport
       }
     },
     'Mac Model' => {
-      :field => 'model'
+      :field => 'model',
+      :threshold => 10.0
     },
     'CPU Type' => {
       :field => 'cputype',
@@ -57,14 +58,16 @@ class FeedReport
       }
     },
     'Amount of RAM [MB]' => {
-      :field => 'ramMB'
+      :field => 'ramMB',
+      :threshold => 2
     },
     'App Version' => {
       :field => 'appVersionShort',
       :sort_by => lambda { |v| v.split('.').map(&:to_i) }
     },
     'Locale' => {
-      :field => 'lang'
+      :field => 'lang',
+      :threshold => 5
     }
   }
 
@@ -139,7 +142,10 @@ class FeedReport
         [title] + counts.transpose
       end
 
-      @reports[report_title] = data_lines.reject { |title, counts, sums| counts.sum == 0 }
+      data_lines.delete_if { |title, counts, normalized| counts.sum == 0 }
+      data_lines.delete_if { |title, counts, normalized| normalized.max < options[:threshold] } if options[:threshold]
+
+      @reports[report_title] = data_lines
     end
   end
 
