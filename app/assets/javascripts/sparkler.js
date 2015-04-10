@@ -64,15 +64,6 @@ $.formatPercent = function(value) {
   function chartDataFromJSON(json) {
     var index = -1;
 
-    var totals = [];
-    for (var i = 0; i < json.months.length; i++) {
-      var sum = 0;
-      for (var s = 0; s < json.series.length; s++) {
-        sum += json.series[s][1][i];
-      }
-      totals.push(Math.max(sum, 1));
-    }
-
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     return {
@@ -86,7 +77,7 @@ $.formatPercent = function(value) {
 
         return {
           label: s[0],
-          data: s[1].map(function(d, i) { return d * 100 / totals[i] }),
+          data: s[2],
           strokeColor: color,
           pointColor: color,
           pointStrokeColor: "#fff",

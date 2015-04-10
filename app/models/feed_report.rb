@@ -80,18 +80,32 @@ class FeedReport
     @stats = {}
 
     @feed.statistics.each do |stat|
+      ym = [stat.year, stat.month]
       property_stats = @stats[stat.property_id] ||= {}
       value_stats = property_stats[stat.value_id] ||= {}
-      year_stats = value_stats[stat.year] ||= {}
-      year_stats[stat.month] = stat.counter
+      value_stats[ym] = stat.counter
+    end
+
+    @sums = {}
+    @stats.each do |property_id, property_stats|
+      property_sums = @sums[property_id] ||= {}
+      property_stats.each do |value_id, value_stats|
+        value_stats.each do |ym, count|
+          property_sums[ym] ||= 0
+          property_sums[ym] += count
+        end
+      end
     end
   end
 
-  def count_for(property_id, value_id, year, month)
+  def sum_for(property_id, ym)
+    @sums[property_id] && @sums[property_id][ym] || 0
+  end
+
+  def count_for(property_id, value_id, ym)
     property_stats = @stats[property_id] || {}
     value_stats = property_stats[value_id] || {}
-    year_stats = value_stats[year] || {}
-    year_stats[month] || 0
+    value_stats[ym] || 0
   end
 
   def generate_reports
@@ -114,14 +128,18 @@ class FeedReport
       end
 
       data_lines = value_ids_for_title.keys.sort_by(&sorting).map do |title|
-        counts = @months.map do |y, m|
-          value_ids_for_title[title].sum { |value_id| count_for(property.id, value_id, y, m) }
+        value_ids = value_ids_for_title[title]
+
+        counts = @months.map do |ym|
+          count = value_ids.sum { |value_id| count_for(property.id, value_id, ym) }
+          total = sum_for(property.id, ym)
+          [count, total > 0 ? count * 1000 / total / 10.0 : 0]
         end
 
-        [title, counts]
+        [title] + counts.transpose
       end
 
-      @reports[report_title] = data_lines.reject { |title, counts| counts.sum == 0 }
+      @reports[report_title] = data_lines.reject { |title, counts, sums| counts.sum == 0 }
     end
   end
 
