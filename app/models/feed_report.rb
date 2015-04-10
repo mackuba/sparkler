@@ -57,9 +57,10 @@ class FeedReport
         end
       }
     },
-    'Amount of RAM [MB]' => {
+    'Amount of RAM' => {
       :field => 'ramMB',
-      :threshold => 2
+      :threshold => 2,
+      :values => lambda { |v| "#{v.to_i / 1024} GB" }
     },
     'App Version' => {
       :field => 'appVersionShort',
@@ -117,17 +118,21 @@ class FeedReport
     REPORTS.each do |report_title, options|
       property = Property.find_or_create_by(name: options[:field])
 
-      value_title_map = options[:values]
+      value_converter = case options[:values]
+        when Proc then options[:values]
+        when Hash then lambda { |title| options[:values][title] || title }
+        else lambda { |title| title }
+      end
+
       grouping = options[:group_by] || lambda { |title| title }
       sorting = options[:sort_by] || lambda { |title| [title.to_i, title.downcase] }
 
       value_ids_for_title = {}
 
       property.values.each do |value|
-        title = grouping.call(value.name)
-        processed_title = value_title_map && value_title_map[title] || title
-        value_ids_for_title[processed_title] ||= []
-        value_ids_for_title[processed_title] << value.id
+        title = value_converter.call(grouping.call(value.name))
+        value_ids_for_title[title] ||= []
+        value_ids_for_title[title] << value.id
       end
 
       data_lines = value_ids_for_title.keys.sort_by(&sorting).map do |title|
