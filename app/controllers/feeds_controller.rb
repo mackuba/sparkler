@@ -18,9 +18,12 @@ class FeedsController < ApplicationController
 
   def reload
     @feed.reload
-    redirect_to feeds_path
-  rescue Exception
-    redirect_to feeds_path
+
+    if request.xhr?
+      render partial: 'feed', locals: { feed: @feed }
+    else
+      redirect_to feeds_path
+    end
   end
 
   def new

@@ -16,6 +16,32 @@ window.$ = {
     return (where || document).querySelector(selector);
   },
 
+  ajax: function(options) {
+    var request = new XMLHttpRequest();
+    request.open(options.method || 'GET', options.url, true);
+    request.setRequestHeader('X-Requested-With', 'XMLHTTPRequest');
+
+    request.onload = function() {
+      if (this.status >= 200 && this.status < 400) {
+        if (typeof options.success === 'function') {
+          options.success(this.response);
+        }
+      } else {
+        if (typeof options.error === 'function') {
+          options.error();
+        }
+      }
+    };
+
+    request.onerror = function() {
+      if (typeof options.error === 'function') {
+        options.error();
+      }
+    };
+
+    request.send();
+  },
+
   log: function(text) {
     if (console.log) {
       console.log(text);

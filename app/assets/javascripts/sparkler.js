@@ -6,6 +6,31 @@
   });
 
   function initialize() {
+    $.find('section.feed').forEach(function(feed) {
+      feed.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' && e.target.className === 'reload') {
+          e.preventDefault();
+
+          var a = e.target;
+          if (a.innerText === '...') {
+            return;
+          }
+
+          a.innerText = '...';
+
+          $.ajax({
+            url: a.href,
+            success: function(response) {
+              feed.innerHTML = response;
+            },
+            error: function() {
+              a.innerText = 'Try again';
+            }
+          });
+        }
+      });
+    });
+
     $.find('.report canvas').forEach(function(canvas, i) {
       var title = $.findOne('h2', $.parentSection(canvas));
       createReport(canvas, 'all', title.innerText !== "Total downloads");
