@@ -12,7 +12,10 @@
     <nav>
       <a href="#" data-range="all" class="selected">All data</a>
       <a href="#" data-range="year">Last year</a>
-      <a href="#" data-range="month">Last month</a>
+
+      <% unless report_title == "Total downloads" %>
+        <a href="#" data-range="month">Last month</a>
+      <% end %>
     </nav>
 
     <canvas></canvas>

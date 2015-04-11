@@ -51,14 +51,8 @@ $.parentSection = function(start) {
         buttons.forEach(function(a) { a.classList.remove('selected') });
         a.classList.add('selected');
 
-        var range = a.getAttribute('data-range');
-
-        if (range === 'month') {
-          // TODO
-        } else {
-          var canvas = $.findOne('canvas', $.parentSection(a));
-          createReport(canvas, range);
-        }
+        var canvas = $.findOne('canvas', $.parentSection(a));
+        createReport(canvas, a.getAttribute('data-range'));
       });
     });
   }
@@ -86,24 +80,35 @@ $.parentSection = function(start) {
     var context = canvas.getContext('2d');
     var percents = (canvas.json.series[0][0] !== "Downloads");
     var showLabel = (canvas.json.series[0][0] !== "Downloads");
-    var chartData = chartDataFromJSON(canvas.json, range);
 
-    var options = {
-      animation: false,
-      bezierCurve: false,
-      datasetFill: false,
-      multiTooltipTemplate: "<%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
-      pointHitDetectionRadius: 5,
-      scaleBeginAtZero: true,
-      scaleLabel: "<%= value %>" + (percents ? "%" : ""),
-      tooltipTemplate: (
-        showLabel ?
-        "<%= label %>: <%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>") :
-        "<%= label %>: " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>")
-      ),
-    };
+    if (range === 'month') {
+      var chartData = pieChartDataFromJSON(canvas.json);
 
-    canvas.chart = new Chart(context).Line(chartData, options);
+      var options = {
+        animateRotate: false
+      };
+
+      canvas.chart = new Chart(context).Pie(chartData, options);
+    } else {
+      var chartData = lineChartDataFromJSON(canvas.json, range);
+
+      var options = {
+        animation: false,
+        bezierCurve: false,
+        datasetFill: false,
+        multiTooltipTemplate: "<%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
+        pointHitDetectionRadius: 5,
+        scaleBeginAtZero: true,
+        scaleLabel: "<%= value %>" + (percents ? "%" : ""),
+        tooltipTemplate: (
+          showLabel ?
+          "<%= label %>: <%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>") :
+          "<%= label %>: " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>")
+        ),
+      };
+
+      canvas.chart = new Chart(context).Line(chartData, options);
+    }
 
     if (showLabel) {
       var legend = $.findOne('.legend', $.parentSection(canvas));
@@ -115,7 +120,7 @@ $.parentSection = function(start) {
     }
   }
 
-  function chartDataFromJSON(json, range) {
+  function lineChartDataFromJSON(json, range) {
     var index = -1;
 
     var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -152,5 +157,23 @@ $.parentSection = function(start) {
       labels: labels,
       datasets: datasets
     };
+  }
+
+  function pieChartDataFromJSON(json) {
+    var index = -1;
+
+    return json.series.map(function(s) {
+      index += 1;
+      var hue = 360 / json.series.length * index;
+      var color = s[0] === "Other" ? "#888" : "hsl(" + hue + ", 70%, 60%)";
+      var highlight = s[0] === "Other" ? "#aaa" : "hsl(" + hue + ", 70%, 70%)";
+
+      return {
+        label: s[0],
+        value: s[1][s[1].length - 1],
+        color: color,
+        highlight: highlight
+      };
+    })
   }
 })();
