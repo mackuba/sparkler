@@ -52,7 +52,7 @@ class FeedsController < ApplicationController
   private
 
   def feed_params
-    params.require(:feed).permit(:title, :name, :url)
+    params.require(:feed).permit(:title, :name, :url, :public_stats, :public_counts)
   end
 
   def set_feed

@@ -19,6 +19,14 @@
     <%= f.label :url %><br>
     <%= f.text_field :url %>
   </div>
+  <div class="field">
+    <%= f.label :public_stats, "Make statistics page publicly accessible" %><br>
+    <%= f.check_box :public_stats %>
+  </div>
+  <div class="field">
+    <%= f.label :public_counts, "Make download counts visible to everyone" %><br>
+    <%= f.check_box :public_counts %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

@@ -2,6 +2,8 @@ class StatisticsController < ApplicationController
   before_action :set_feed
 
   def index
+    require_admin unless @feed.public_stats
+
     @report = FeedReport.new(@feed)
   end
 
