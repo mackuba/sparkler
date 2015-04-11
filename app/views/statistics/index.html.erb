@@ -16,10 +16,12 @@
       <% unless report_title == "Total downloads" %>
         <a href="#" data-range="month">This month</a>
 
-        <span class="button">
-          <%= check_box_tag "denormalize-#{i}", '1', false, class: 'denormalize' %>
-          <%= label_tag "denormalize-#{i}", 'Show absolute amounts' %>
-        </span>
+        <% if @include_counts %>
+          <span class="button">
+            <%= check_box_tag "denormalize-#{i}", '1', false, class: 'denormalize' %>
+            <%= label_tag "denormalize-#{i}", 'Show absolute amounts' %>
+          </span>
+        <% end %>
       <% end %>
     </nav>
 

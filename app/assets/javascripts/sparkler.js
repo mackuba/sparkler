@@ -7,7 +7,8 @@
 
   function initialize() {
     $.find('.report canvas').forEach(function(canvas, i) {
-      createReport(canvas, 'all', i > 0);
+      var title = $.findOne('h2', $.parentSection(canvas));
+      createReport(canvas, 'all', title.innerText !== "Total downloads");
     });
 
     $.find('.report nav a').forEach(function(a) {
@@ -23,7 +24,7 @@
         var checkbox = $.findOne('.denormalize', section);
 
         var canvas = $.findOne('canvas', section);
-        createReport(canvas, a.getAttribute('data-range'), checkbox && !checkbox.checked);
+        createReport(canvas, a.getAttribute('data-range'), !checkbox || !checkbox.checked);
       });
     });
 
@@ -116,7 +117,7 @@
 
       return {
         label: s[0],
-        data: normalized ? s[2] : s[1],
+        data: normalized ? (s.length > 2 ? s[2] : s[1]) : s[1],
         strokeColor: color,
         pointColor: color,
         pointStrokeColor: "#fff",
@@ -148,7 +149,7 @@
       var color = s[0] === "Other" ? "#888" : "hsl(" + hue + ", 70%, 60%)";
       var highlight = s[0] === "Other" ? "#aaa" : "hsl(" + hue + ", 70%, 70%)";
 
-      var amounts = normalized ? s[2] : s[1];
+      var amounts = normalized ? (s.length > 2 ? s[2] : s[1]) : s[1];
 
       return {
         label: s[0],

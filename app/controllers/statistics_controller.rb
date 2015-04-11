@@ -4,7 +4,8 @@ class StatisticsController < ApplicationController
   def index
     require_admin unless @feed.public_stats
 
-    @report = FeedReport.new(@feed)
+    @include_counts = @feed.public_counts || logged_in?
+    @report = FeedReport.new(@feed, include_counts: @include_counts)
   end
 
   private

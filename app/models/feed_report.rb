@@ -2,7 +2,8 @@ class FeedReport
   REPORTS = {
     'Total downloads' => {
       :field => 'osVersion',
-      :group_by => lambda { |v| "Downloads" }
+      :group_by => lambda { |v| "Downloads" },
+      :only_counts => true
     },
     'OS Version' => {
       :field => 'osVersion',
@@ -80,8 +81,10 @@ class FeedReport
     }
   }
 
-  def initialize(feed)
+  def initialize(feed, options = {})
     @feed = feed
+    @include_counts = options[:include_counts]
+
     @months = feed.statistics.select('DISTINCT year, month').order('year, month').map { |r| [r.year, r.month] }
 
     calculate_stats
@@ -124,6 +127,8 @@ class FeedReport
     @reports = {}
 
     REPORTS.each do |report_title, options|
+      next if options[:only_counts] && !@include_counts
+
       property = Property.find_or_create_by(name: options[:field])
 
       value_converter = case options[:values]
@@ -146,13 +151,19 @@ class FeedReport
       data_lines = value_ids_for_title.keys.sort_by(&sorting).map do |title|
         value_ids = value_ids_for_title[title]
 
-        counts = @months.map do |ym|
+        counts = []
+        normalized_counts = []
+
+        @months.each do |ym|
           count = value_ids.sum { |value_id| count_for(property.id, value_id, ym) }
           total = sum_for(property.id, ym)
-          [count, total > 0 ? count * 1000 / total / 10.0 : 0]
+          normalized = (total > 0) ? (count * 1000 / total / 10.0) : 0
+
+          counts.push(count)
+          normalized_counts.push(normalized)
         end
 
-        [title] + counts.transpose
+        [title, counts, normalized_counts]
       end
 
       data_lines.delete_if { |title, counts, normalized| counts.sum == 0 }
@@ -175,6 +186,12 @@ class FeedReport
         ]
         
         data_lines.push(other_dataset)
+      end
+
+      if options[:only_counts]
+        data_lines.each { |dataset| dataset.delete_at(2) }
+      elsif !@include_counts
+        data_lines.each { |dataset| dataset.delete_at(1) }
       end
 
       @reports[report_title] = data_lines
