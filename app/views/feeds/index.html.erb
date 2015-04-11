@@ -20,9 +20,13 @@
     <% else %>
       <p class="status unknown">Last version: not loaded yet</p>
     <% end %>
-    
-    <!-- <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed)) %> -->
+
+    <% if logged_in? %>
+      <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed)) %>
+    <% end %>
   </section>
 <% end %>
 
-<p class="command"><%= link_to "Add new feed…", new_feed_path %></p>
+<% if logged_in? %>
+  <p class="command"><%= link_to "Add new feed…", new_feed_path %></p>
+<% end %>

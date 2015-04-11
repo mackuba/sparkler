@@ -11,4 +11,8 @@ class ApplicationController < ActionController::Base
   def logged_in?
     session[:logged_in]
   end
+
+  def require_admin
+    redirect_to login_form_user_path, alert: 'You need to log in to access this page.' unless logged_in?
+  end
 end
