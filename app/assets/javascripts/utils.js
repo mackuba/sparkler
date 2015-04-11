@@ -1,10 +1,18 @@
 window.$ = {
   find: function(selector, where) {
+    if (!selector) {
+      throw new Error('$.find: no selector given');
+    }
+
     var collection = (where || document).querySelectorAll(selector);
     return Array.prototype.slice.apply(collection);
   },
 
   findOne: function(selector, where) {
+    if (!selector) {
+      throw new Error('$.findOne: no selector given');
+    }
+
     return (where || document).querySelector(selector);
   },
 
