@@ -33,7 +33,7 @@ class UserController < ApplicationController
 
   def logout
     session[:logged_in] = false
-    redirect_to feeds_path, notice: "You have logged out"
+    redirect_to login_form_user_path, notice: "You have logged out"
   end
 
 

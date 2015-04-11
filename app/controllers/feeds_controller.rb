@@ -1,6 +1,6 @@
 class FeedsController < ApplicationController
   before_action :set_feed, only: [:show, :reload, :edit, :update]
-  before_action :require_admin, except: [:index, :show]
+  before_action :require_admin, except: :show
 
   def index
     @feeds = Feed.all_feeds

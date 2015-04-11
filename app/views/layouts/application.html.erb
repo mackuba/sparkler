@@ -10,7 +10,7 @@
   </head>
   <body>
     <nav class="left">
-      <% unless params[:controller] == 'feeds' && params[:action] = 'index' %>
+      <% if logged_in? && !(params[:controller] == 'feeds' && params[:action] == 'index') %>
         <%= link_to "< Home", feeds_path %>
       <% end %>
     </nav>
