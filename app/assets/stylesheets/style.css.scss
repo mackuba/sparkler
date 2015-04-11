@@ -82,16 +82,42 @@ a {
   padding-left: 3rem;
 }
 
-canvas.report {
-  width: 100%;
-  height: 200px;
-}
+.report {
+  canvas {
+    width: 100%;
+    height: 200px;
+  }
 
-.report-info {
-  font-size: 1.2rem;
-  line-height: 140%;
-  color: #666;
-  margin-bottom: 2rem;
+  .info {
+    font-size: 1.2rem;
+    line-height: 140%;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  nav {
+    margin: 2rem 0;
+    
+    a {
+      font-size: 1.1rem;
+      border: 1px solid #ddd;
+      padding: 0.4rem 0.8rem 0.3rem;
+      border-radius: 4px;
+      margin-right: 0.3rem;
+      color: #333;
+
+      &:hover {
+        text-decoration: none;
+        background-color: hsl(210, 80%, 97%);
+        border-color: hsl(210, 50%, 87%);
+      }
+
+      &.selected {
+        background-color: hsl(210, 80%, 94%);
+        border-color: hsl(210, 50%, 75%);
+      }
+    }
+  }
 }
 
 .legend {
