@@ -1,6 +1,6 @@
 <h1><%= @feed.title %> feed statistics</h1>
 
-<% @report.reports.each do |report_title| %>
+<% @report.reports.each_with_index do |report_title, i| %>
   <section class="report">
     <h2><%= report_title %></h2>
 
@@ -15,6 +15,11 @@
 
       <% unless report_title == "Total downloads" %>
         <a href="#" data-range="month">Last month</a>
+
+        <span class="button">
+          <%= check_box_tag "denormalize-#{i}", '1', false, class: 'denormalize' %>
+          <%= label_tag "denormalize-#{i}", 'Show absolute amounts' %>
+        </span>
       <% end %>
     </nav>
 

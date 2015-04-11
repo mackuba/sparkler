@@ -22,6 +22,10 @@ $.formatPercent = function(value) {
 };
 
 $.parentSection = function(start) {
+  if (!start) {
+    throw new Error('$.parentSection: no element given');
+  }
+
   var element = start;
 
   while (element && element.tagName !== 'SECTION') {
@@ -39,20 +43,33 @@ $.parentSection = function(start) {
   });
 
   function initialize() {
-    $.find('.report canvas').forEach(function(canvas) {
-      createReport(canvas, 'all');
+    $.find('.report canvas').forEach(function(canvas, i) {
+      createReport(canvas, 'all', i > 0);
     });
 
     $.find('.report nav a').forEach(function(a) {
       a.addEventListener('click', function(e) {
         e.preventDefault();
 
-        var buttons = $.find('a', $.parentSection(a));
+        var section = $.parentSection(a);
+
+        var buttons = $.find('a', section);
         buttons.forEach(function(a) { a.classList.remove('selected') });
         a.classList.add('selected');
 
-        var canvas = $.findOne('canvas', $.parentSection(a));
-        createReport(canvas, a.getAttribute('data-range'));
+        var checkbox = $.findOne('.denormalize', section);
+
+        var canvas = $.findOne('canvas', section);
+        createReport(canvas, a.getAttribute('data-range'), checkbox && !checkbox.checked);
+      });
+    });
+
+    $.find('.report .denormalize').forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        var section = $.parentSection(checkbox);
+        var selectedMode = $.findOne('a.selected', section).getAttribute('data-range');
+        var canvas = $.findOne('canvas', section);
+        createReport(canvas, selectedMode, !checkbox.checked);
       });
     });
   }
@@ -60,7 +77,7 @@ $.parentSection = function(start) {
 
   // charts
 
-  function createReport(canvas, range) {
+  function createReport(canvas, range, normalized) {
     if (canvas.chart) {
       canvas.chart.destroy();
       delete canvas.chart;
@@ -78,32 +95,32 @@ $.parentSection = function(start) {
     }
 
     var context = canvas.getContext('2d');
-    var percents = (canvas.json.series[0][0] !== "Downloads");
     var showLabel = (canvas.json.series[0][0] !== "Downloads");
 
     if (range === 'month') {
-      var chartData = pieChartDataFromJSON(canvas.json);
+      var chartData = pieChartDataFromJSON(canvas.json, normalized);
 
       var options = {
-        animateRotate: false
+        animateRotate: false,
+        tooltipTemplate: "<%= label %>: " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>")
       };
 
       canvas.chart = new Chart(context).Pie(chartData, options);
     } else {
-      var chartData = lineChartDataFromJSON(canvas.json, range);
+      var chartData = lineChartDataFromJSON(canvas.json, range, normalized);
 
       var options = {
         animation: false,
         bezierCurve: false,
         datasetFill: false,
-        multiTooltipTemplate: "<%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
+        multiTooltipTemplate: "<%= datasetLabel %> – " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
         pointHitDetectionRadius: 5,
         scaleBeginAtZero: true,
-        scaleLabel: "<%= value %>" + (percents ? "%" : ""),
+        scaleLabel: "<%= value %>" + (normalized ? "%" : ""),
         tooltipTemplate: (
           showLabel ?
-          "<%= label %>: <%= datasetLabel %> – " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>") :
-          "<%= label %>: " + (percents ? "<%= $.formatPercent(value) %>" : "<%= value %>")
+          "<%= label %>: <%= datasetLabel %> – " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>") :
+          "<%= label %>: " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>")
         ),
       };
 
@@ -120,7 +137,7 @@ $.parentSection = function(start) {
     }
   }
 
-  function lineChartDataFromJSON(json, range) {
+  function lineChartDataFromJSON(json, range, normalized) {
     var index = -1;
 
     var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -136,7 +153,7 @@ $.parentSection = function(start) {
 
       return {
         label: s[0],
-        data: s[0] === "Downloads" ? s[1] : s[2],
+        data: normalized ? s[2] : s[1],
         strokeColor: color,
         pointColor: color,
         pointStrokeColor: "#fff",
@@ -159,7 +176,7 @@ $.parentSection = function(start) {
     };
   }
 
-  function pieChartDataFromJSON(json) {
+  function pieChartDataFromJSON(json, normalized) {
     var index = -1;
 
     return json.series.map(function(s) {
@@ -168,9 +185,11 @@ $.parentSection = function(start) {
       var color = s[0] === "Other" ? "#888" : "hsl(" + hue + ", 70%, 60%)";
       var highlight = s[0] === "Other" ? "#aaa" : "hsl(" + hue + ", 70%, 70%)";
 
+      var amounts = normalized ? s[2] : s[1];
+
       return {
         label: s[0],
-        value: s[1][s[1].length - 1],
+        value: amounts[amounts.length - 1],
         color: color,
         highlight: highlight
       };
