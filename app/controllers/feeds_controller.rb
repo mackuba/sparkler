@@ -1,5 +1,5 @@
 class FeedsController < ApplicationController
-  before_action :set_feed, only: [:show, :reload]
+  before_action :set_feed, only: [:show, :reload, :edit, :update]
   before_action :require_admin, except: [:index, :show]
 
   def index
@@ -34,6 +34,17 @@ class FeedsController < ApplicationController
       redirect_to feeds_path, notice: 'Feed was successfully created.'
     else
       render :new
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @feed.update_attributes(feed_params)
+      redirect_to feeds_path, notice: 'Feed was successfully updated.'
+    else
+      render :edit
     end
   end
 

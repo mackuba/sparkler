@@ -23,6 +23,7 @@
 
     <% if logged_in? %>
       <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed)) %>
+      <%= link_to "Edit", edit_feed_path(feed) %>
     <% end %>
   </section>
 <% end %>
