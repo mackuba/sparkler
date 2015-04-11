@@ -67,6 +67,11 @@ $.parentSection = function(start) {
   // charts
 
   function createReport(canvas, range) {
+    if (canvas.chart) {
+      canvas.chart.destroy();
+      delete canvas.chart;
+    }
+
     if (!canvas.json) {
       var script = $.findOne('script', $.parentSection(canvas));
 
@@ -98,12 +103,12 @@ $.parentSection = function(start) {
       ),
     };
 
-    var chart = new Chart(context).Line(chartData, options);
+    canvas.chart = new Chart(context).Line(chartData, options);
 
     if (showLabel) {
       var legend = $.findOne('.legend', $.parentSection(canvas));
       if (legend) {
-        legend.innerHTML = chart.generateLegend();
+        legend.innerHTML = canvas.chart.generateLegend();
       } else {
         $.log('Error: no legend element found.');
       }
