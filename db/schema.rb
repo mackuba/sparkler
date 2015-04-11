@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1) do
+ActiveRecord::Schema.define(version: 20150411125726) do
 
   create_table "feeds", force: :cascade do |t|
     t.string "title", limit: 255, null: false
@@ -33,6 +33,10 @@ ActiveRecord::Schema.define(version: 1) do
   end
 
   add_index "statistics", ["feed_id", "year", "month", "property_id", "value_id"], name: "stats_index", unique: true, using: :btree
+
+  create_table "users", force: :cascade do |t|
+    t.string "password_digest", limit: 255
+  end
 
   create_table "values", force: :cascade do |t|
     t.integer "property_id", limit: 4,   null: false

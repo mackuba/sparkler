@@ -1,5 +1,9 @@
 <h1>Feeds at <%= request.host %></h1>
 
+<% if flash[:notice] %>
+  <p class="notice"><%= flash[:notice] %></p>
+<% end %>
+
 <% @feeds.each do |feed| %>
   <section class="feed">
     <h2><%= link_to feed.title, feed_statistics_path(feed) %></h2>

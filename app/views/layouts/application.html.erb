@@ -15,6 +15,15 @@
       <% end %>
     </nav>
 
+    <nav class="right">
+      <% if logged_in? %>
+        <%= link_to "Account", edit_user_path %>
+        <%= link_to "Log out", logout_user_path %>
+      <% else %>
+        <%= link_to "Log in", login_form_user_path %>
+      <% end %>
+    </nav>
+
     <%= yield %>
   </body>
 </html>

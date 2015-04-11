@@ -7,11 +7,13 @@ body {
   margin: 0 auto;
 }
 
-nav.left {
+body > nav {
   position: absolute;
-  left: 3rem;
   top: 3rem;
   font-size: 1.4rem;
+
+  &.left { left: 3rem; }
+  &.right { right: 3rem; }
   
   a {
     color: #666;
