@@ -23,5 +23,6 @@ namespace :deploy do
 
   task :link_configs do
     run "cd #{release_path}; ln -s #{shared_path}/config/database.yml #{release_path}/config"
+    run "cd #{release_path}; ln -s #{shared_path}/config/secret_key_base.key #{release_path}/config"
   end
 end
