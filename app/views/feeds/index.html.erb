@@ -1,0 +1,15 @@
+<h1>Feeds at <%= request.host %></h1>
+
+<% if flash[:notice] %>
+  <p class="notice"><%= flash[:notice] %></p>
+<% end %>
+
+<% @feeds.each do |feed| %>
+  <section class="feed">
+    <%= render :partial => 'feed', :locals => { :feed => feed } %>
+  </section>
+<% end %>
+
+<% if logged_in? %>
+  <p class="command"><%= link_to "Add new feed…", new_feed_path %></p>
+<% end %>

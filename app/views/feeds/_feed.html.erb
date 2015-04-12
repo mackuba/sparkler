@@ -1,0 +1,19 @@
+<h2><%= link_to feed.title, feed_statistics_path(feed) %></h2>
+<h3><%= link_to feed_url(feed), feed %></h3>
+
+<% if feed.loaded? %>
+  <% if feed.last_version %>
+    <p class="status ok">Last version: <%= feed.last_version %></p>
+  <% else %>
+    <p class="status error">Status: XML parsing error</p>
+  <% end %>
+<% elsif feed.load_error %>
+  <p class="status error">Status: <%= feed.load_error %></p>
+<% else %>
+  <p class="status unknown">Last version: not loaded yet</p>
+<% end %>
+
+<% if logged_in? %>
+  <%= link_to(feed.loaded? || feed.load_error ? "Reload" : "Load", reload_feed_path(feed), class: 'reload') %>
+  <%= link_to "Edit", edit_feed_path(feed) %>
+<% end %>
