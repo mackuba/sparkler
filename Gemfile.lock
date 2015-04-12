@@ -146,7 +146,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   byebug
-  capistrano (~> 2.4)
+  capistrano (~> 2.15.1)
   mysql2
   nokogiri
   rails (~> 4.2)

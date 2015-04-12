@@ -9,7 +9,7 @@ gem 'nokogiri'
 gem 'bcrypt'
 
 group :development do
-  gem 'capistrano', '~> 2.4'
+  gem 'capistrano', '~> 2.15.1'
 end
 
 group :development, :test do
