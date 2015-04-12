@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150411205844) do
+ActiveRecord::Schema.define(version: 20150412193930) do
 
   create_table "feeds", force: :cascade do |t|
     t.string  "title",         limit: 255,                 null: false
@@ -19,6 +19,11 @@ ActiveRecord::Schema.define(version: 20150411205844) do
     t.string  "url",           limit: 255,                 null: false
     t.boolean "public_stats",  limit: 1,   default: false, null: false
     t.boolean "public_counts", limit: 1,   default: false, null: false
+  end
+
+  create_table "options", force: :cascade do |t|
+    t.integer "property_id", limit: 4,   null: false
+    t.string  "name",        limit: 255, null: false
   end
 
   create_table "properties", force: :cascade do |t|
@@ -30,19 +35,14 @@ ActiveRecord::Schema.define(version: 20150411205844) do
     t.integer "year",        limit: 4,             null: false
     t.integer "month",       limit: 4,             null: false
     t.integer "property_id", limit: 4,             null: false
-    t.integer "value_id",    limit: 4,             null: false
+    t.integer "option_id",   limit: 4,             null: false
     t.integer "counter",     limit: 4, default: 0, null: false
   end
 
-  add_index "statistics", ["feed_id", "year", "month", "property_id", "value_id"], name: "stats_index", unique: true, using: :btree
+  add_index "statistics", ["feed_id", "year", "month", "property_id", "option_id"], name: "stats_index", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string "password_digest", limit: 255
-  end
-
-  create_table "values", force: :cascade do |t|
-    t.integer "property_id", limit: 4,   null: false
-    t.string  "name",        limit: 255, null: false
   end
 
 end

@@ -68,23 +68,23 @@ class Feed < ActiveRecord::Base
     params.delete('id')
     subtype = params.delete('cpusubtype')
 
-    params.each do |property_name, value_name|
-      save_param(timestamp, property_name, value_name)
+    params.each do |property_name, option_name|
+      save_param(timestamp, property_name, option_name)
     end
 
     save_param(timestamp, 'appVersionShort', user_agent.split(' ').first.split('/').last)
     save_param(timestamp, 'cpusubtype', "#{params['cputype']}.#{subtype}") if subtype
   end
 
-  def save_param(timestamp, property_name, value_name)
+  def save_param(timestamp, property_name, option_name)
     property = Property.find_or_create_by(name: property_name)
-    value = property.values.find_or_create_by(name: value_name)
+    option = property.options.find_or_create_by(name: option_name)
 
     statistic = self.statistics.find_or_create_by(
       year: timestamp.year,
       month: timestamp.month,
       property: property,
-      value: value
+      option: option
     )
 
     Statistic.update_counters(statistic.id, counter: 1)

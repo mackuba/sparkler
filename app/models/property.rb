@@ -1,4 +1,4 @@
 class Property < ActiveRecord::Base
-  has_many :values
+  has_many :options
   validates_presence_of :name
 end

@@ -13,7 +13,7 @@ class FeedReport
     'Mac Class' => {
       :field => 'model',
       :group_by => lambda { |v| v[/^[[:alpha:]]+/] },
-      :values => {
+      :options => {
         'MacBookAir' => 'MacBook Air',
         'MacBookPro' => 'MacBook Pro',
         'Macmini' => 'Mac Mini',
@@ -26,14 +26,14 @@ class FeedReport
     },
     'CPU Type' => {
       :field => 'cputype',
-      :values => {
+      :options => {
         '7' => 'Intel',
         '18' => 'PowerPC'
       }
     },
     'CPU Subtype' => {
       :field => 'cpusubtype',
-      :values => {
+      :options => {
         '7.4' => 'X86_ARCH1',
         '7.8' => 'X86_64_H (Haswell)',
         '18.9' => 'POWERPC_750',
@@ -44,7 +44,7 @@ class FeedReport
     },
     'CPU Bits' => {
       :field => 'cpu64bit',
-      :values => {
+      :options => {
         '0' => '32-bit',
         '1' => '64-bit'
       }
@@ -69,7 +69,7 @@ class FeedReport
     'Amount of RAM' => {
       :field => 'ramMB',
       :threshold => 2,
-      :values => lambda { |v| "#{v.to_i / 1024} GB" }
+      :options => lambda { |v| "#{v.to_i / 1024} GB" }
     },
     'App Version' => {
       :field => 'appVersionShort',
@@ -97,15 +97,15 @@ class FeedReport
     @feed.statistics.each do |stat|
       ym = [stat.year, stat.month]
       property_stats = @stats[stat.property_id] ||= {}
-      value_stats = property_stats[stat.value_id] ||= {}
-      value_stats[ym] = stat.counter
+      option_stats = property_stats[stat.option_id] ||= {}
+      option_stats[ym] = stat.counter
     end
 
     @sums = {}
     @stats.each do |property_id, property_stats|
       property_sums = @sums[property_id] ||= {}
-      property_stats.each do |value_id, value_stats|
-        value_stats.each do |ym, count|
+      property_stats.each do |option_id, option_stats|
+        option_stats.each do |ym, count|
           property_sums[ym] ||= 0
           property_sums[ym] += count
         end
@@ -117,10 +117,10 @@ class FeedReport
     @sums[property_id] && @sums[property_id][ym] || 0
   end
 
-  def count_for(property_id, value_id, ym)
+  def count_for(property_id, option_id, ym)
     property_stats = @stats[property_id] || {}
-    value_stats = property_stats[value_id] || {}
-    value_stats[ym] || 0
+    option_stats = property_stats[option_id] || {}
+    option_stats[ym] || 0
   end
 
   def generate_reports
@@ -131,31 +131,31 @@ class FeedReport
 
       property = Property.find_or_create_by(name: options[:field])
 
-      value_converter = case options[:values]
-        when Proc then options[:values]
-        when Hash then lambda { |title| options[:values][title] || title }
+      option_converter = case options[:options]
+        when Proc then options[:options]
+        when Hash then lambda { |title| options[:options][title] || title }
         else lambda { |title| title }
       end
 
       grouping = options[:group_by] || lambda { |title| title }
       sorting = options[:sort_by] || lambda { |title| [title.to_i, title.downcase] }
 
-      value_ids_for_title = {}
+      option_ids_for_title = {}
 
-      property.values.each do |value|
-        title = value_converter.call(grouping.call(value.name))
-        value_ids_for_title[title] ||= []
-        value_ids_for_title[title] << value.id
+      property.options.each do |option|
+        title = option_converter.call(grouping.call(option.name))
+        option_ids_for_title[title] ||= []
+        option_ids_for_title[title] << option.id
       end
 
-      data_lines = value_ids_for_title.keys.sort_by(&sorting).map do |title|
-        value_ids = value_ids_for_title[title]
+      data_lines = option_ids_for_title.keys.sort_by(&sorting).map do |title|
+        option_ids = option_ids_for_title[title]
 
         counts = []
         normalized_counts = []
 
         @months.each do |ym|
-          count = value_ids.sum { |value_id| count_for(property.id, value_id, ym) }
+          count = option_ids.sum { |option_id| count_for(property.id, option_id, ym) }
           total = sum_for(property.id, ym)
           normalized = (total > 0) ? (count * 1000 / total / 10.0) : 0
 
