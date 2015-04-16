@@ -23,6 +23,7 @@ class FeedReport
     'Mac Model' => {
       :field => 'model',
       :threshold => 7.5,
+      :show_other => false,
     },
     'Number of CPU Cores' => {
       :field => 'ncpu'
@@ -179,13 +180,15 @@ class FeedReport
           end
         end
         
-        other_dataset = [
-          "Other",
-          other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[1][i] }; sum },
-          other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[2][i] }; sum }
-        ]
+        unless options[:show_other] == false
+          other_dataset = [
+            "Other",
+            other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[1][i] }; sum },
+            other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[2][i] }; sum }
+          ]
         
-        data_lines.push(other_dataset)
+          data_lines.push(other_dataset)
+        end
       end
 
       if options[:only_counts]
