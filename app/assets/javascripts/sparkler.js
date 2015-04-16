@@ -33,7 +33,7 @@
 
     $.find('.report canvas').forEach(function(canvas, i) {
       var title = $.findOne('h2', $.parentSection(canvas));
-      createReport(canvas, 'all', title.innerText !== "Total downloads");
+      createReport(canvas, 'all', title.innerText !== "Total feed downloads");
     });
 
     $.find('.report nav a').forEach(function(a) {
@@ -51,7 +51,7 @@
 
         var canvas = $.findOne('canvas', section);
         createReport(canvas, a.getAttribute('data-range'),
-          (!checkbox || !checkbox.checked) && title.innerText !== "Total downloads");
+          (!checkbox || !checkbox.checked) && title.innerText !== "Total feed downloads");
       });
     });
 

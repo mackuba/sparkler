@@ -1,11 +1,11 @@
 class FeedReport
   REPORTS = {
-    'Total downloads' => {
+    'Total feed downloads' => {
       :field => 'osVersion',
       :group_by => lambda { |v| "Downloads" },
       :only_counts => true
     },
-    'OS Version' => {
+    'OS X Version' => {
       :field => 'osVersion',
       :group_by => lambda { |v| v.split('.').first(2).join('.') },
       :sort_by => lambda { |v| v.split('.').map(&:to_i) }
@@ -49,7 +49,7 @@ class FeedReport
         '1' => '64-bit'
       }
     },
-    'Number of CPUs' => {
+    'Number of CPU Cores' => {
       :field => 'ncpu'
     },
     'CPU Frequency' => {
@@ -75,7 +75,7 @@ class FeedReport
       :field => 'appVersionShort',
       :sort_by => lambda { |v| v.split('.').map(&:to_i) }
     },
-    'Locale' => {
+    'System Locale' => {
       :field => 'lang',
       :threshold => 5
     }
