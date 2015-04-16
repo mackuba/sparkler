@@ -1,3 +1,3 @@
-//= require Chart.min
+//= require Chart
 //= require utils
 //= require sparkler
