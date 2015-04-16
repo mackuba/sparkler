@@ -70,10 +70,10 @@ class FeedReport
       :options => {
         '7.4' => 'X86_ARCH1',
         '7.8' => 'X86_64_H (Haswell)',
-        '18.9' => 'POWERPC_750',
-        '18.10' => 'POWERPC_7400',
-        '18.11' => 'POWERPC_7450',
-        '18.100' => 'POWERPC_970'
+        '18.9' => 'PowerPC 750',
+        '18.10' => 'PowerPC 7400',
+        '18.11' => 'PowerPC 7450',
+        '18.100' => 'PowerPC 970'
       }
     },
     'CPU Bits' => {
