@@ -141,7 +141,7 @@
     var datasets = json.series.map(function(s) {
       index += 1;
       var hue = 360 / json.series.length * index;
-      var color = s[0] === "Other" ? "#888" : "hsl(" + hue + ", 70%, 60%)";
+      var color = s[0] === "Other" ? "#999" : "hsl(" + hue + ", 70%, 60%)";
 
       return {
         label: s[0],
@@ -174,7 +174,7 @@
     return json.series.map(function(s) {
       index += 1;
       var hue = 360 / json.series.length * index;
-      var color = s[0] === "Other" ? "#888" : "hsl(" + hue + ", 70%, 60%)";
+      var color = s[0] === "Other" ? "#999" : "hsl(" + hue + ", 70%, 60%)";
       var highlight = s[0] === "Other" ? "#aaa" : "hsl(" + hue + ", 70%, 70%)";
 
       var amounts = normalized ? (s.length > 2 ? s[2] : s[1]) : s[1];
