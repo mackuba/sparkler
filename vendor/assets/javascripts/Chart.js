@@ -2628,19 +2628,17 @@
 					}));
 				},this);
 
-				this.buildScale(data.labels);
-
-
-				this.eachPoints(function(point, index){
-					helpers.extend(point, {
-						x: this.scale.calculateX(index),
-						y: this.scale.endPoint
-					});
-					point.save();
-				}, this);
-
 			},this);
 
+			this.buildScale(data.labels);
+
+			this.eachPoints(function(point, index){
+				helpers.extend(point, {
+					x: this.scale.calculateX(index),
+					y: this.scale.endPoint
+				});
+				point.save();
+			}, this);
 
 			this.render();
 		},
