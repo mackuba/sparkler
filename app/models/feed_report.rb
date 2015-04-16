@@ -22,7 +22,7 @@ class FeedReport
     },
     'Mac Model' => {
       :field => 'model',
-      :threshold => 10.0
+      :threshold => 7.5,
     },
     'Number of CPU Cores' => {
       :field => 'ncpu'
@@ -68,7 +68,7 @@ class FeedReport
     },
     'Amount of RAM' => {
       :field => 'ramMB',
-      :threshold => 2,
+      :threshold => 2.5,
       :options => lambda { |v| "#{v.to_i / 1024} GB" }
     },
     'App Version' => {
@@ -77,7 +77,7 @@ class FeedReport
     },
     'System Locale' => {
       :field => 'lang',
-      :threshold => 5
+      :threshold => 2.5
     }
   }
 
