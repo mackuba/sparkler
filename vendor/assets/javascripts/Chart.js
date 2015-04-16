@@ -889,6 +889,7 @@
 		},
 		destroy : function(){
 			this.clear();
+			this.stop();
 			unbindEvents(this, this.events);
 			var canvas = this.chart.canvas;
 
