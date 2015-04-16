@@ -24,6 +24,9 @@ class FeedReport
       :field => 'model',
       :threshold => 10.0
     },
+    'Number of CPU Cores' => {
+      :field => 'ncpu'
+    },
     'CPU Type' => {
       :field => 'cputype',
       :options => {
@@ -48,9 +51,6 @@ class FeedReport
         '0' => '32-bit',
         '1' => '64-bit'
       }
-    },
-    'Number of CPU Cores' => {
-      :field => 'ncpu'
     },
     'CPU Frequency' => {
       :field => 'cpuFreqMHz',
