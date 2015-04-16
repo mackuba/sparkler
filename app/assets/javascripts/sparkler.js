@@ -47,9 +47,11 @@
         a.classList.add('selected');
 
         var checkbox = $.findOne('.denormalize', section);
+        var title = $.findOne('h2', section);
 
         var canvas = $.findOne('canvas', section);
-        createReport(canvas, a.getAttribute('data-range'), !checkbox || !checkbox.checked);
+        createReport(canvas, a.getAttribute('data-range'),
+          (!checkbox || !checkbox.checked) && title.innerText !== "Total downloads");
       });
     });
 
