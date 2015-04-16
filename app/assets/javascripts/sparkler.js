@@ -91,6 +91,7 @@
 
       var options = {
         animateRotate: false,
+        animation: false,
         tooltipTemplate: "<%= label %>: " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>")
       };
 
