@@ -11,7 +11,7 @@
   <body>
     <nav class="left">
       <% if logged_in? && !(params[:controller] == 'feeds' && params[:action] == 'index') %>
-        <%= link_to "< Home", feeds_path %>
+        <%= link_to "< Feed List", feeds_path %>
       <% end %>
     </nav>
 

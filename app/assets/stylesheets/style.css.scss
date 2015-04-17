@@ -19,6 +19,7 @@ body > nav {
   
   a {
     color: #666;
+    margin: 0 0.7rem;
   }
 }
 
@@ -27,6 +28,11 @@ h1 {
   margin-top: 12rem;
   margin-bottom: 8rem;
   text-align: center;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 1.6rem;
 }
 
 a {
@@ -145,14 +151,15 @@ a {
     display: inline-block;
     margin-right: 1.5rem;
     margin-bottom: 1rem;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    color: #333;
     
     span {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       margin-right: 5px;
-      vertical-align: top;
+      border-radius: 5px;
     }
   }
 }

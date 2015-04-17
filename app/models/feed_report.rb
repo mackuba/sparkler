@@ -87,7 +87,7 @@ class FeedReport
       :field => 'cpuFreqMHz',
       :group_by => lambda { |v|
         ghz = (v.to_i / 500 * 5).to_f / 10
-        "#{ghz}-#{ghz + 0.4} GHz"
+        "#{ghz} – #{ghz + 0.4} GHz"
       }
     },
     'Amount of RAM' => {
