@@ -3,7 +3,7 @@
 <%= form_for(@user, url: user_path) do |f| %>
   <% if @user.errors.any? %>
     <div class="error-explanation">
-      <h2>Fix <%= @user.errors.count == 1 ? 'this error' : 'these errors' %> in order to save your account:</h2>
+      <h2>Fix <%= pluralize_errors(@user.errors) %> in order to save your account:</h2>
 
       <ul>
         <% @user.errors.full_messages.each do |message| %>
@@ -22,6 +22,6 @@
     <%= f.password_field :password_confirmation %>
   </div>
   <div class="actions">
-    <%= f.submit 'Update Account' %>
+    <%= f.submit 'Update Account' %> or <%= link_to 'Cancel', feeds_path %>
   </div>
 <% end %>

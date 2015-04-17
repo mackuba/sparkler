@@ -2,7 +2,8 @@ require 'open-uri'
 
 class Feed < ActiveRecord::Base
   has_many :statistics
-  validates_presence_of :title, :name, :url
+  validates_presence_of :title, :url
+  validates_presence_of :name, if: lambda { |u| u.title.present? }
 
   after_create :add_to_list
 
