@@ -15,7 +15,7 @@ class UserController < ApplicationController
       session[:logged_in] = true
       redirect_to feeds_path, notice: "Logged in successfully"
     else
-      flash.now[:alert] = "Incorrect password"
+      flash.now[:alert] = "The password you've entered is incorrect."
       render :login_form
     end
   end

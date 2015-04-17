@@ -175,7 +175,7 @@ form {
 
 label {
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
 input[type=text], input[type=password] {
@@ -191,7 +191,7 @@ input[type=text], input[type=password] {
   margin-top: 2rem;
 }
 
-.error-explanation {
+.alert, .error-explanation {
   background: #fdd;
   padding: 1.5rem;
   margin-bottom: 2.5rem;
