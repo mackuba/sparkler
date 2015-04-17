@@ -1,7 +1,9 @@
+<h1>Edit account</h1>
+
 <%= form_for(@user, url: user_path) do |f| %>
   <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited your account from being saved:</h2>
+    <div class="error-explanation">
+      <h2>Fix <%= @user.errors.count == 1 ? 'this error' : 'these errors' %> in order to save your account:</h2>
 
       <ul>
         <% @user.errors.full_messages.each do |message| %>
@@ -12,14 +14,14 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :password %><br>
+    <%= f.label :password %>
     <%= f.password_field :password %>
   </div>
   <div class="field">
-    <%= f.label :password_confirmation %><br>
+    <%= f.label :password_confirmation %>
     <%= f.password_field :password_confirmation %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Update Account' %>
   </div>
 <% end %>

@@ -1,5 +1,11 @@
 class User < ActiveRecord::Base
-  has_secure_password
+  has_secure_password validations: false
+
+  validates_presence_of :password
+  validates_length_of :password,
+    minimum: 6, maximum: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED, allow_blank: true
+  validates_confirmation_of :password, allow_blank: true
+
 
   def self.find_admin
     user = User.first
