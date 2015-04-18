@@ -110,6 +110,7 @@ class FeedReport
   def initialize(feed, options = {})
     @feed = feed
     @include_counts = options[:include_counts]
+    @properties = Property.all.includes(:options)
 
     @months = feed.statistics.select("DISTINCT #{YM_FORMAT} AS ym").order('ym').map(&:ym)
 
@@ -158,7 +159,7 @@ class FeedReport
     REPORTS.each do |report_title, options|
       next if options[:only_counts] && !@include_counts
 
-      property = Property.find_or_create_by(name: options[:field])
+      property = @properties.detect { |p| p.name == options[:field] } || Property.create!(name: options[:field])
 
       option_converter = case options[:options]
         when Proc then options[:options]
