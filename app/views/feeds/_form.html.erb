@@ -21,7 +21,7 @@
   </div>
   <div class="field">
     <%= f.label :url, "Source URL" %>
-    <%= f.text_field :url %>
+    <%= f.text_field :url, autocomplete: 'off' %>
   </div>
   <div class="field checkbox">
     <%= f.check_box :public_stats %>
