@@ -100,7 +100,8 @@
     var hasPercentages = (title.innerText !== "Total feed downloads");
 
     $.find('canvas', report).forEach(function(canvas) {
-      createChart(canvas, 'all', hasPercentages);
+      canvas.range = 'all';
+      createChart(canvas, hasPercentages);
     });
 
     $.find('nav a', report).forEach(function(a) {
@@ -127,19 +128,18 @@
     var hasPercentages = (title.innerText !== "Total feed downloads") && (!checkbox || !checkbox.checked);
 
     var canvas = $.findOne('canvas', section);
-    createChart(canvas, link.getAttribute('data-range'), hasPercentages);
+    canvas.range = link.getAttribute('data-range');
+    createChart(canvas, hasPercentages);
   }
 
   function onDenormalizeCheckboxChange(event) {
     var checkbox = event.target;
-    var section = $.parentSection(checkbox);
-    var selectedMode = $.findOne('a.selected', section).getAttribute('data-range');
-    var canvas = $.findOne('canvas', section);
+    var canvas = $.findOne('canvas', $.parentSection(checkbox));
 
-    createChart(canvas, selectedMode, !checkbox.checked);
+    createChart(canvas, !checkbox.checked);
   }
 
-  function createChart(canvas, range, normalized) {
+  function createChart(canvas, normalized) {
     if (canvas.chart) {
       canvas.chart.destroy();
       delete canvas.chart;
@@ -160,7 +160,7 @@
     var showLabel = (canvas.json.series[0].title !== "Downloads");
     var valueFormat = normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
 
-    if (range === 'month') {
+    if (canvas.range === 'month') {
       var chartData = pieChartDataFromJSON(canvas.json, normalized);
 
       var options = {
@@ -171,7 +171,7 @@
 
       canvas.chart = new Chart(context).Pie(chartData, options);
     } else {
-      var chartData = lineChartDataFromJSON(canvas.json, range, normalized);
+      var chartData = lineChartDataFromJSON(canvas.json, canvas.range, normalized);
 
       var options = {
         animation: false,
