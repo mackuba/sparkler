@@ -12,11 +12,12 @@
           e.preventDefault();
 
           var a = e.target;
-          if (a.innerText === '...') {
-            return;
-          }
+          a.style.display = 'none';
 
-          a.innerText = '...';
+          var spinner = a.nextElementSibling;
+          if (spinner.className === 'reload-spinner') {
+            spinner.style.display = 'inline';
+          }
 
           $.ajax({
             url: a.href,
@@ -24,6 +25,8 @@
               feed.innerHTML = response;
             },
             error: function() {
+              spinner.style.display = 'none';
+              a.style.display = 'inline';
               a.innerText = 'Try again';
             }
           });

@@ -43,6 +43,7 @@
   <span class="separator">&bull;</span>
 
   <%= link_to(feed.loaded? || feed.load_error ? "Reload data" : "Load data", reload_feed_path(feed), class: 'reload') %>
+  <%= image_tag 'spinner.gif', class: 'reload-spinner' %> <!-- thx to http://preloaders.net -->
 
   <span class="separator">&bull;</span>
 

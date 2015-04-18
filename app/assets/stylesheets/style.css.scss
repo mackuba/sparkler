@@ -88,6 +88,12 @@ a {
     border-top: 1px solid hsl(210, 20%, 88%);
     padding-top: 1.2rem;
   }
+
+  .reload-spinner {
+    vertical-align: top;
+    display: none;
+    margin: 0 1rem;
+  }
 }
 
 .commands {
