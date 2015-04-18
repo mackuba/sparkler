@@ -31,6 +31,16 @@
       });
     });
 
+    $.find('#feed_title').forEach(function(input) {
+      input.addEventListener('change', function() {
+        var nameField = $.findOne('#feed_name');
+
+        if (nameField.value == "") {
+          nameField.value = input.value.toLowerCase().replace(/\W+/g, '_');
+        }
+      });
+    });
+
     $.find('.report canvas').forEach(function(canvas, i) {
       var title = $.findOne('h2', $.parentSection(canvas));
       createReport(canvas, 'all', title.innerText !== "Total feed downloads");
