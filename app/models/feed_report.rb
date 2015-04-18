@@ -107,6 +107,8 @@ class FeedReport
 
   YM_FORMAT = "DATE_FORMAT(date, '%Y-%m')"
 
+  attr_reader :reports
+
   def initialize(feed, options = {})
     @feed = feed
     @include_counts = options[:include_counts]
@@ -154,7 +156,7 @@ class FeedReport
   end
 
   def generate_reports
-    @reports = {}
+    @reports = []
 
     REPORTS.each do |report_title, options|
       next if options[:only_counts] && !@include_counts
@@ -232,18 +234,7 @@ class FeedReport
         data_lines.each { |dataset| dataset.delete(:amounts) }
       end
 
-      @reports[report_title] = data_lines
+      @reports.push({ title: report_title, months: @months, series: data_lines })
     end
-  end
-
-  def reports
-    @reports.keys
-  end
-
-  def data_for_report(title)
-    {
-      months: @months,
-      series: @reports[title]
-    }
   end
 end

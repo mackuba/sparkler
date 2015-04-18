@@ -1,10 +1,10 @@
 <h1><%= @feed.title %> feed statistics</h1>
 
-<% @report.reports.each_with_index do |report_title, i| %>
+<% @report.reports.each_with_index do |report, i| %>
   <section class="report">
-    <h2><%= report_title %></h2>
+    <h2><%= report[:title] %></h2>
 
-    <% if report_title == "Total feed downloads" %>
+    <% if report[:title] == "Total feed downloads" %>
       <p class="info">Only requests that include system profile info are included (submitted once
         a week on average and only for users who explicitly agreed).</p>
     <% end %>
@@ -13,7 +13,7 @@
       <a href="#" data-range="all" class="selected">All data</a>
       <a href="#" data-range="year">Last year</a>
 
-      <% unless report_title == "Total feed downloads" %>
+      <% unless report[:title] == "Total feed downloads" %>
         <a href="#" data-range="month">This month</a>
 
         <% if @include_counts %>
@@ -28,7 +28,7 @@
     <canvas></canvas>
 
     <script type="application/json">
-      <%== @report.data_for_report(report_title).to_json %>
+      <%== report.to_json %>
     </script>
 
     <div class="legend"></div>
