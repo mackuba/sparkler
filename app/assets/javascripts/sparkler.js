@@ -44,6 +44,17 @@
       });
     });
 
+    $.find('#feed_public_stats').forEach(function(stats) {
+      var counts = $.findOne('#feed_public_counts');
+
+      stats.addEventListener('change', function() {
+        counts.disabled = !stats.checked;
+        counts.checked = stats.checked && counts.checked;
+      });
+
+      counts.disabled = !stats.checked;
+    });
+
     $.find('.report canvas').forEach(function(canvas, i) {
       var title = $.findOne('h2', $.parentSection(canvas));
       createReport(canvas, 'all', title.innerText !== "Total feed downloads");

@@ -182,6 +182,10 @@ form {
     margin-bottom: 0.5rem;
   }
 
+  input:disabled + label {
+    color: #888;
+  }
+
   .checkbox {
     margin: 1.5rem 0;
 
