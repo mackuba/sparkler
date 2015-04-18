@@ -97,11 +97,12 @@
 
   function initializeReport(report) {
     var title = $.findOne('h2', report);
-    var hasPercentages = (title.innerText !== "Total feed downloads");
 
     $.find('canvas', report).forEach(function(canvas) {
       canvas.range = 'all';
-      createChart(canvas, hasPercentages);
+      canvas.normalized = (title.innerText !== "Total feed downloads");
+
+      createChart(canvas);
     });
 
     $.find('nav a', report).forEach(function(a) {
@@ -117,24 +118,21 @@
     event.preventDefault();
 
     var link = event.target;
-    var section = $.parentSection(link);
-
     selectOnlyLink(link);
 
-    var checkbox = $.findOne('.denormalize', section);
-    var title = $.findOne('h2', section);
-    var hasPercentages = (title.innerText !== "Total feed downloads") && (!checkbox || !checkbox.checked);
-
-    var canvas = $.findOne('canvas', section);
+    var canvas = $.findOne('canvas', $.parentSection(link));
     canvas.range = link.getAttribute('data-range');
-    createChart(canvas, hasPercentages);
+
+    createChart(canvas);
   }
 
   function onDenormalizeCheckboxChange(event) {
     var checkbox = event.target;
-    var canvas = $.findOne('canvas', $.parentSection(checkbox));
 
-    createChart(canvas, !checkbox.checked);
+    var canvas = $.findOne('canvas', $.parentSection(checkbox));
+    canvas.normalized = !checkbox.checked;
+
+    createChart(canvas);
   }
 
   function selectOnlyLink(link) {
@@ -143,7 +141,7 @@
     link.classList.add('selected');
   }
 
-  function createChart(canvas, normalized) {
+  function createChart(canvas) {
     if (canvas.chart) {
       canvas.chart.destroy();
       delete canvas.chart;
@@ -162,11 +160,11 @@
 
     var context = canvas.getContext('2d');
     var showLabel = (canvas.json.series[0].title !== "Downloads");
-    var fracValueFormat = normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
-    var intValueFormat = normalized ? "<%= value %>%" : "<%= value %>";
+    var fracValueFormat = canvas.normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
+    var intValueFormat = canvas.normalized ? "<%= value %>%" : "<%= value %>";
 
     if (canvas.range === 'month') {
-      var chartData = pieChartDataFromJSON(canvas.json, normalized);
+      var chartData = pieChartDataFromJSON(canvas.json, canvas.normalized);
 
       var options = {
         animateRotate: false,
@@ -176,7 +174,7 @@
 
       canvas.chart = new Chart(context).Pie(chartData, options);
     } else {
-      var chartData = lineChartDataFromJSON(canvas.json, canvas.range, normalized);
+      var chartData = lineChartDataFromJSON(canvas.json, canvas.range, canvas.normalized);
 
       var options = {
         animation: false,
