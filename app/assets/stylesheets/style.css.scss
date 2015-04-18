@@ -48,53 +48,48 @@ a {
   }
 }
 
-.feed, .command {
-  width: 480px;
+.feeds {
+  width: 60rem;
+  margin: 0 auto;
 }
 
 .feed {
-  margin: 2rem auto;
-  border: 1px solid #e4e4e4;
+  margin: 4rem auto;
+  border: 1px solid hsl(210, 20%, 88%);
   border-radius: 5px;
-  background: linear-gradient(white, #f4f4f4);
-  box-sizing: border-box;
-  padding: 0.5rem 1.5rem;
+  background: hsl(210, 80%, 97%);
+  padding: 1.5rem;
   
-  h2, h3 {
-    margin: 1rem 0;
+  h2 {
+    margin: 0 0 2rem;
+    font-size: 2rem;
 
     a {
-      color: #444;
+      color: #333;
     }
   }
 
-  h2 {
-    font-size: 2.2rem;
-  }
-  
-  h3 {
-    font-size: 1.5rem;
-    font-weight: normal;
+  .status, .status-ok, .status-error, p a {
+    margin-left: 0.5rem;
   }
 
   .status {
-    margin: 1.6rem 0 1rem;
-    font-size: 1.2rem;
-    
-    &.ok, &.unknown {
-      color: #666;
-    }
+    color: black;
+  }
 
-    &.error {
-      color: red;
-    }
+  .status-error {
+    color: red;
+  }
+
+  .actions {
+    border-top: 1px solid hsl(210, 20%, 88%);
+    padding-top: 1.2rem;
   }
 }
 
-.command {
+.commands {
   margin: 1rem auto;
-  font-size: 1.4rem;
-  padding-left: 3rem;
+  padding-left: 1rem;
 }
 
 .report {
@@ -204,6 +199,8 @@ input[type=submit] {
 
 .actions {
   margin-top: 2rem;
+
+  a, .separator { margin-right: 0.5rem; }
 }
 
 .alert, .error-explanation {
