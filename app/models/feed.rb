@@ -21,7 +21,7 @@ class Feed < ActiveRecord::Base
   def load_contents
     logger.info "Reloading feed #{title} from #{url}..."
 
-    text = open(url).read
+    text = open(url, :allow_redirections => :safe).read
 
     self.contents = text
     self.last_version = version_from_contents(text)

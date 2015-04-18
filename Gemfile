@@ -7,6 +7,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'nokogiri'
 gem 'bcrypt'
+gem 'open_uri_redirections'
 
 group :development do
   gem 'capistrano', '~> 2.15.1'
