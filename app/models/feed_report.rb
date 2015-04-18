@@ -181,49 +181,54 @@ class FeedReport
       data_lines = option_ids_for_title.keys.sort_by(&sorting).map do |title|
         option_ids = option_ids_for_title[title]
 
-        counts = []
-        normalized_counts = []
+        amounts = []
+        normalized_amounts = []
 
         @months.each do |ym|
-          count = option_ids.sum { |option_id| count_for(property.id, option_id, ym) }
+          amount = option_ids.sum { |option_id| count_for(property.id, option_id, ym) }
           total = sum_for(property.id, ym)
-          normalized = (total > 0) ? (count * 1000 / total / 10.0) : 0
+          normalized = (total > 0) ? (amount * 1000 / total / 10.0) : 0
 
-          counts.push(count)
-          normalized_counts.push(normalized)
+          amounts.push(amount)
+          normalized_amounts.push(normalized)
         end
 
-        [title, counts, normalized_counts]
+        { title: title, amounts: amounts, normalized: normalized_amounts }
       end
 
-      data_lines.delete_if { |title, counts, normalized| counts.sum == 0 }
+      data_lines.delete_if { |d| d[:amounts].sum == 0 }
 
       if options[:threshold]
         other = []
 
         data_lines.clone.each do |dataset|
-          title, counts, normalized = dataset
-          if normalized.max < options[:threshold]
+          if dataset[:normalized].max < options[:threshold]
             data_lines.delete(dataset)
             other.push(dataset)
           end
         end
         
         unless options[:show_other] == false
-          other_dataset = [
-            "Other",
-            other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[1][i] }; sum },
-            other.reduce([0] * @months.length) { |sum, dataset| sum.each_with_index { |x, i| sum[i] += dataset[2][i] }; sum }
-          ]
+          other_dataset = {
+            title: "Other",
+            amounts: other.reduce([0] * @months.length) { |sum, dataset|
+              sum.each_with_index { |x, i| sum[i] += dataset[:amounts][i] }
+              sum
+            },
+            normalized: other.reduce([0] * @months.length) { |sum, dataset|
+              sum.each_with_index { |x, i| sum[i] += dataset[:normalized][i] }
+              sum
+            }
+          }
         
           data_lines.push(other_dataset)
         end
       end
 
       if options[:only_counts]
-        data_lines.each { |dataset| dataset.delete_at(2) }
+        data_lines.each { |dataset| dataset.delete(:normalized) }
       elsif !@include_counts
-        data_lines.each { |dataset| dataset.delete_at(1) }
+        data_lines.each { |dataset| dataset.delete(:amounts) }
       end
 
       @reports[report_title] = data_lines

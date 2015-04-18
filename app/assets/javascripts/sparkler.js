@@ -157,7 +157,7 @@
     }
 
     var context = canvas.getContext('2d');
-    var showLabel = (canvas.json.series[0][0] !== "Downloads");
+    var showLabel = (canvas.json.series[0].title !== "Downloads");
     var valueFormat = normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
 
     if (range === 'month') {
@@ -209,11 +209,11 @@
     });
 
     var datasets = json.series.map(function(s, index) {
-      var color = datasetColor(s[0], index, json.series.length);
-      var amounts = normalized ? (s.length > 2 ? s[2] : s[1]) : s[1];
+      var color = datasetColor(s.title, index, json.series.length);
+      var amounts = normalized && s.normalized || s.amounts;
 
       return {
-        label: s[0],
+        label: s.title,
         data: amounts,
         strokeColor: color,
         pointColor: color,
@@ -239,12 +239,12 @@
 
   function pieChartDataFromJSON(json, normalized) {
     return json.series.map(function(s, index) {
-      var amounts = normalized ? (s.length > 2 ? s[2] : s[1]) : s[1];
-      var color = datasetColor(s[0], index, json.series.length);
-      var highlight = highlightColor(s[0], index, json.series.length);
+      var amounts = normalized && s.normalized || s.amounts;
+      var color = datasetColor(s.title, index, json.series.length);
+      var highlight = highlightColor(s.title, index, json.series.length);
 
       return {
-        label: s[0],
+        label: s.title,
         value: amounts[amounts.length - 1],
         color: color,
         highlight: highlight
