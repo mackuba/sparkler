@@ -3,7 +3,7 @@ class FeedsController < ApplicationController
   before_action :require_admin, except: :show
 
   def index
-    @feeds = Feed.all
+    @feeds = Feed.order('title')
   end
 
   def show
