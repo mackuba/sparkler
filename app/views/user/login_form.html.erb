@@ -5,6 +5,10 @@
     <p class="alert"><%= flash[:alert] %></p>
   <% end %>
 
+  <% if flash[:notice] %>
+    <p class="notice"><%= flash[:notice] %></p>
+  <% end %>
+
   <div class="field">
     <%= label_tag :password, 'Enter admin password:' %>
     <%= password_field_tag :password %>

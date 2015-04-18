@@ -6,14 +6,14 @@ class UserController < ApplicationController
       render
     else
       session[:logged_in] = true
-      redirect_to feeds_path, notice: "Logged in without a password - please set a password in account settings!"
+      redirect_to feeds_path, alert: "Logged in without a password - please set a password in account settings!"
     end
   end
 
   def login
     if @user.authenticate(params[:password])
       session[:logged_in] = true
-      redirect_to feeds_path, notice: "Logged in successfully"
+      redirect_to feeds_path
     else
       flash.now[:alert] = "The password you've entered is incorrect."
       render :login_form
@@ -25,7 +25,7 @@ class UserController < ApplicationController
 
   def update
     if @user.update_attributes(params.require(:user).permit(:password, :password_confirmation))
-      redirect_to feeds_path, notice: "Password updated successfully"
+      redirect_to feeds_path, notice: "Your account was updated successfully."
     else
       render :edit
     end
@@ -33,7 +33,7 @@ class UserController < ApplicationController
 
   def logout
     session[:logged_in] = false
-    redirect_to login_form_user_path, notice: "You have logged out"
+    redirect_to login_form_user_path, notice: "You've been logged out."
   end
 
 
