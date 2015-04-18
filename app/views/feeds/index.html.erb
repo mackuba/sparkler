@@ -1,4 +1,4 @@
-<h1>Feeds at <%= request.host %></h1>
+<h1><%= link_to "Feeds at #{request.host}", feeds_path %></h1>
 
 <section class="feeds">
   <% if flash[:notice] %>

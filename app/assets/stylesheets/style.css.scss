@@ -32,6 +32,9 @@ h1 {
   text-align: center;
   font-weight: 500;
   color: black;
+
+  a { color: black; }
+  a:hover { text-decoration: none; }
 }
 
 h2 {
