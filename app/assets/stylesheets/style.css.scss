@@ -1,4 +1,7 @@
+$blue: 210;
+
 html {
+  // 1 rem = 10 px
   font-size: 62.5%;
 }
 
@@ -14,20 +17,19 @@ body {
 .body-wrapper {
   overflow: hidden;
   margin: 0 auto;
-  width: 800px;
-}
-
-.body-wrapper > nav {
-  position: absolute;
-  top: 3rem;
-  font-size: 1.4rem;
-
-  &.left { left: 3rem; }
-  &.right { right: 3rem; }
+  width: 80rem;
   
-  a {
-    color: #666;
-    margin: 0 0.7rem;
+  > nav {
+    position: absolute;
+    top: 3rem;
+    font-size: 1.4rem;
+
+    &.left { left: 3rem; }
+    &.right { right: 3rem; }
+  
+    a {
+      margin: 0 0.7rem;
+    }
   }
 }
 
@@ -64,21 +66,17 @@ a {
 
 .feed {
   margin: 4rem auto;
-  border: 1px solid hsl(210, 20%, 88%);
-  border-radius: 5px;
-  background: hsl(210, 80%, 97%);
   padding: 1.5rem;
-  
+  border: 1px solid hsl($blue, 20%, 88%);
+  border-radius: 5px;
+  background: hsl($blue, 80%, 97%);
+
   h2 {
     margin: 0 0 2rem;
     font-size: 2rem;
-
-    a {
-      color: #333;
-    }
   }
 
-  .status, .status-ok, .status-error, p a {
+  .status, .status-error, p a {
     margin-left: 0.5rem;
   }
 
@@ -91,7 +89,7 @@ a {
   }
 
   .actions {
-    border-top: 1px solid hsl(210, 20%, 88%);
+    border-top: 1px solid hsl($blue, 20%, 88%);
     padding-top: 1.2rem;
   }
 
@@ -139,13 +137,13 @@ a {
 
       &:hover {
         text-decoration: none;
-        background-color: hsl(210, 80%, 97%);
-        border-color: hsl(210, 50%, 87%);
+        background-color: hsl($blue, 80%, 97%);
+        border-color: hsl($blue, 50%, 87%);
       }
 
       &.selected {
-        background-color: hsl(210, 80%, 94%);
-        border-color: hsl(210, 50%, 75%);
+        background-color: hsl($blue, 80%, 94%);
+        border-color: hsl($blue, 50%, 75%);
       }
 
       input {
