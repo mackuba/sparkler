@@ -10,11 +10,11 @@
   </head>
   <body>
     <div class="body-wrapper">
-      <nav class="left">
-        <% if logged_in? && !(params[:controller] == 'feeds' && params[:action] == 'index') %>
+      <% if logged_in? && !(params[:controller] == 'feeds' && params[:action] == 'index') %>
+        <nav class="left">
           <%= link_to "< Feed List", feeds_path %>
-        <% end %>
-      </nav>
+        </nav>
+      <% end %>
 
       <nav class="right">
         <% if logged_in? %>
