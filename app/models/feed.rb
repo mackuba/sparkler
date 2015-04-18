@@ -4,6 +4,8 @@ class Feed < ActiveRecord::Base
   has_many :statistics
   validates_presence_of :title, :name, :url
 
+  before_save :reset_if_url_changed
+
   def to_param
     name
   end
@@ -30,6 +32,14 @@ class Feed < ActiveRecord::Base
 
     self.load_error = error
     save!
+  end
+
+  def reset_if_url_changed
+    if url_changed?
+      self.contents = nil
+      self.last_version = nil
+      self.load_error = nil
+    end
   end
 
   def version_from_contents(contents)
