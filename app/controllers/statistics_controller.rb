@@ -11,6 +11,6 @@ class StatisticsController < ApplicationController
   private
 
   def set_feed
-    @feed = Feed.get_by_name(params[:feed_id])
+    @feed = Feed.find_by_name!(params[:feed_id])
   end
 end

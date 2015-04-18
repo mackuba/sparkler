@@ -3,11 +3,13 @@ class FeedsController < ApplicationController
   before_action :require_admin, except: :show
 
   def index
-    @feeds = Feed.all_feeds
+    @feeds = Feed.all
   end
 
   def show
     save_statistics(@feed) if request_from_sparkle?
+
+    @feed.load_if_needed
 
     if @feed.contents
       render body: @feed.contents
@@ -17,7 +19,7 @@ class FeedsController < ApplicationController
   end
 
   def reload
-    @feed.reload
+    @feed.load_contents
 
     if request.xhr?
       render partial: 'feed', locals: { feed: @feed }
@@ -59,7 +61,7 @@ class FeedsController < ApplicationController
   end
 
   def set_feed
-    @feed = Feed.get_by_name(params[:id])
+    @feed = Feed.find_by_name!(params[:id])
   end
 
   def request_from_sparkle?

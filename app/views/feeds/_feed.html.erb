@@ -19,7 +19,7 @@
     <% if feed.last_version %>
       <span class="status">OK</span>
     <% else %>
-      <span class="status-error">XML parsing error</span>
+      <span class="status-error">No versions found</span>
     <% end %>
   <% elsif feed.load_error %>
     <span class="status-error">Error: <%= feed.load_error %></span>

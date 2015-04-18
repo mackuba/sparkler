@@ -4,48 +4,32 @@ class Feed < ActiveRecord::Base
   has_many :statistics
   validates_presence_of :title, :name, :url
 
-  after_create :add_to_list
-
-  attr_reader :last_version, :load_error
-
-  def self.all_feeds
-    @@feeds ||= Feed.all.to_a
-  end
-
-  def self.get_by_name(name)
-    feed = all_feeds.detect { |f| f.name == name }
-    feed or raise ActiveRecord::RecordNotFound.new("Couldn't find Feed with name='#{name}'")
-  end
-
   def to_param
     name
   end
 
-  def add_to_list
-    self.class.all_feeds << self
-  end
-
-  def contents
-    unless @contents
-      puts "Reloading feed from #{url}..."
-      @contents = open(url).read
-      @last_version = version_from_contents(@contents)
-      @load_error = nil
-    end
-
-    @contents
-  rescue OpenURI::HTTPError => error
-    puts "Couldn't download feed from #{url}: #{error}"
-    @load_error = error
-  end
-
   def loaded?
-    @contents.present?
+    contents.present?
   end
 
-  def reload
-    @contents = nil
-    contents
+  def load_if_needed
+    load_contents unless loaded?
+  end
+
+  def load_contents
+    logger.info "Reloading feed #{title} from #{url}..."
+
+    text = open(url).read
+
+    self.contents = text
+    self.last_version = version_from_contents(text)
+    self.load_error = nil
+    save!
+  rescue OpenURI::HTTPError => error
+    logger.error "Couldn't download feed from #{url}: #{error}"
+
+    self.load_error = error
+    save!
   end
 
   def version_from_contents(contents)
