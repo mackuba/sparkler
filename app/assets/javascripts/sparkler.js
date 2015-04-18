@@ -209,7 +209,7 @@
     });
 
     var datasets = json.series.map(function(s, index) {
-      var color = datasetColor(s.title, index, json.series.length);
+      var color = datasetColor(s, index, json.series.length);
       var amounts = normalized && s.normalized || s.amounts;
 
       return {
@@ -240,8 +240,8 @@
   function pieChartDataFromJSON(json, normalized) {
     return json.series.map(function(s, index) {
       var amounts = normalized && s.normalized || s.amounts;
-      var color = datasetColor(s.title, index, json.series.length);
-      var highlight = highlightColor(s.title, index, json.series.length);
+      var color = datasetColor(s, index, json.series.length);
+      var highlight = highlightColor(s, index, json.series.length);
 
       return {
         label: s.title,
@@ -252,8 +252,8 @@
     })
   }
 
-  function datasetColor(label, index, total) {
-    if (label === 'Other') {
+  function datasetColor(series, index, total) {
+    if (series.is_other) {
       return '#999';
     } else {
       var hue = 360 / total * index;
@@ -261,8 +261,8 @@
     }
   }
 
-  function highlightColor(label, index, total) {
-    if (label === 'Other') {
+  function highlightColor(series, index, total) {
+    if (series.is_other) {
       return '#aaa';
     } else {
       var hue = 360 / total * index;

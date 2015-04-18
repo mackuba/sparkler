@@ -211,6 +211,7 @@ class FeedReport
         unless options[:show_other] == false
           other_dataset = {
             title: "Other",
+            is_other: true,
             amounts: other.reduce([0] * @months.length) { |sum, dataset|
               sum.each_with_index { |x, i| sum[i] += dataset[:amounts][i] }
               sum
