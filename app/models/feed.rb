@@ -4,6 +4,9 @@ class Feed < ActiveRecord::Base
   has_many :statistics
   validates_presence_of :title, :name, :url
 
+  validates_format_of :name, with: /\A[a-z0-9_\-\.]+\z/, allow_blank: true,
+    message: 'may only contain letters, digits, underscores, hyphens and periods'
+
   before_save :reset_if_url_changed
 
   def to_param
