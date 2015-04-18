@@ -8,16 +8,14 @@
   function initialize() {
     $.find('section.feed').forEach(function(feed) {
       feed.addEventListener('click', function(e) {
-        if (e.target.tagName === 'A' && e.target.className === 'reload') {
+        if (e.target.tagName === 'A' && e.target.classList.contains('reload')) {
           e.preventDefault();
 
           var a = e.target;
           a.style.display = 'none';
 
           var spinner = a.nextElementSibling;
-          if (spinner.className === 'reload-spinner') {
-            spinner.style.display = 'inline';
-          }
+          spinner.style.display = 'inline';
 
           $.ajax({
             url: a.href,
