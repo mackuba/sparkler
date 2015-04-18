@@ -7,90 +7,139 @@
 
   function initialize() {
     $.find('section.feed').forEach(function(feed) {
-      feed.addEventListener('click', function(e) {
-        if (e.target.tagName === 'A' && e.target.classList.contains('reload')) {
-          e.preventDefault();
-
-          var a = e.target;
-          a.style.display = 'none';
-
-          var spinner = a.nextElementSibling;
-          spinner.style.display = 'inline';
-
-          $.ajax({
-            url: a.href,
-            success: function(response) {
-              feed.innerHTML = response;
-            },
-            error: function() {
-              spinner.style.display = 'none';
-              a.style.display = 'inline';
-              a.innerText = 'Try again';
-            }
-          });
-        }
-      });
+      initializeFeedCard(feed);
     });
 
-    $.find('#feed_title').forEach(function(input) {
-      input.addEventListener('change', function() {
-        var nameField = $.findOne('#feed_name');
-
-        if (nameField.value == "") {
-          nameField.value = input.value.toLowerCase().replace(/\W+/g, '_');
-        }
-      });
+    $.find('#new_feed, #edit_feed').forEach(function(form) {
+      initializeFeedForm(form);
     });
 
-    $.find('#feed_public_stats').forEach(function(stats) {
-      var counts = $.findOne('#feed_public_counts');
-
-      stats.addEventListener('change', function() {
-        counts.disabled = !stats.checked;
-        counts.checked = stats.checked && counts.checked;
-      });
-
-      counts.disabled = !stats.checked;
-    });
-
-    $.find('.report canvas').forEach(function(canvas, i) {
-      var title = $.findOne('h2', $.parentSection(canvas));
-      createReport(canvas, 'all', title.innerText !== "Total feed downloads");
-    });
-
-    $.find('.report nav a').forEach(function(a) {
-      a.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        var section = $.parentSection(a);
-
-        var buttons = $.find('a', section);
-        buttons.forEach(function(a) { a.classList.remove('selected') });
-        a.classList.add('selected');
-
-        var checkbox = $.findOne('.denormalize', section);
-        var title = $.findOne('h2', section);
-
-        var canvas = $.findOne('canvas', section);
-        createReport(canvas, a.getAttribute('data-range'),
-          (!checkbox || !checkbox.checked) && title.innerText !== "Total feed downloads");
-      });
-    });
-
-    $.find('.report .denormalize').forEach(function(checkbox) {
-      checkbox.addEventListener('change', function() {
-        var section = $.parentSection(checkbox);
-        var selectedMode = $.findOne('a.selected', section).getAttribute('data-range');
-        var canvas = $.findOne('canvas', section);
-        createReport(canvas, selectedMode, !checkbox.checked);
-      });
+    $.find('.report').forEach(function(report) {
+      initializeReport(report);
     });
   }
 
 
-  // charts
+  // feeds page
 
-  function createReport(canvas, range, normalized) {
+  function initializeFeedCard(feed) {
+    feed.addEventListener('click', onFeedClick);
+  }
+
+  function onFeedClick(event) {
+    if (event.target.tagName === 'A' && event.target.classList.contains('reload')) {
+      event.preventDefault();
+
+      var reloadLink = event.target;
+      var feed = event.currentTarget;
+      reloadFeed(reloadLink, feed);
+    }
+  }
+
+  function reloadFeed(reloadLink, feed) {
+    reloadLink.style.display = 'none';
+
+    var spinner = reloadLink.nextElementSibling;
+    spinner.style.display = 'inline';
+
+    $.ajax({
+      url: reloadLink.href,
+      success: function(response) {
+        feed.innerHTML = response;
+      },
+      error: function() {
+        spinner.style.display = 'none';
+        reloadLink.style.display = 'inline';
+        reloadLink.innerText = 'Try again';
+      }
+    });
+  }
+
+
+  // feed forms
+
+  function initializeFeedForm(form) {
+    $.find('#feed_title', form).forEach(function(input) {
+      input.addEventListener('change', onFeedTitleChange);
+    });
+
+    $.find('#feed_public_stats', form).forEach(function(stats) {
+      stats.addEventListener('change', onFeedPublicStatsChange);
+      updateCountsCheckbox(stats);
+    });
+  }
+
+  function onFeedTitleChange(event) {
+    var titleField = event.target;
+    var nameField = $.findOne('#feed_name');
+
+    if (nameField.value == "") {
+      nameField.value = titleField.value.toLowerCase().replace(/\W+/g, '_');
+    }
+  }
+
+  function onFeedPublicStatsChange(event) {
+    var statsCheckbox = event.target;
+    updateCountsCheckbox(statsCheckbox);
+  }
+
+  function updateCountsCheckbox(statsCheckbox) {
+    var countsCheckbox = $.findOne('#feed_public_counts');
+
+    countsCheckbox.disabled = !statsCheckbox.checked;
+    countsCheckbox.checked = statsCheckbox.checked && countsCheckbox.checked;
+  }
+
+
+  // stats page
+
+  var MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function initializeReport(report) {
+    var title = $.findOne('h2', report);
+    var hasPercentages = (title.innerText !== "Total feed downloads");
+
+    $.find('canvas', report).forEach(function(canvas) {
+      createChart(canvas, 'all', hasPercentages);
+    });
+
+    $.find('nav a', report).forEach(function(a) {
+      a.addEventListener('click', onChartModeLinkClick);
+    });
+
+    $.find('.denormalize', report).forEach(function(checkbox) {
+      checkbox.addEventListener('change', onDenormalizeCheckboxChange);
+    });
+  }
+
+  function onChartModeLinkClick(event) {
+    event.preventDefault();
+
+    var link = event.target;
+    var section = $.parentSection(link);
+
+    var buttons = $.find('a', section);
+    buttons.forEach(function(a) { a.classList.remove('selected') });
+    link.classList.add('selected');
+
+    var checkbox = $.findOne('.denormalize', section);
+    var title = $.findOne('h2', section);
+    var hasPercentages = (title.innerText !== "Total feed downloads") && (!checkbox || !checkbox.checked);
+
+    var canvas = $.findOne('canvas', section);
+    createChart(canvas, link.getAttribute('data-range'), hasPercentages);
+  }
+
+  function onDenormalizeCheckboxChange(event) {
+    var checkbox = event.target;
+    var section = $.parentSection(checkbox);
+    var selectedMode = $.findOne('a.selected', section).getAttribute('data-range');
+    var canvas = $.findOne('canvas', section);
+
+    createChart(canvas, selectedMode, !checkbox.checked);
+  }
+
+  function createChart(canvas, range, normalized) {
     if (canvas.chart) {
       canvas.chart.destroy();
       delete canvas.chart;
@@ -99,7 +148,7 @@
     if (!canvas.json) {
       var script = $.findOne('script', $.parentSection(canvas));
 
-      if (!script && script.getAttribute('type') !== 'application/json') {
+      if (!script || script.getAttribute('type') !== 'application/json') {
         $.log('Error: no data found for canvas.');
         return;
       }
@@ -109,6 +158,7 @@
 
     var context = canvas.getContext('2d');
     var showLabel = (canvas.json.series[0][0] !== "Downloads");
+    var valueFormat = normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
 
     if (range === 'month') {
       var chartData = pieChartDataFromJSON(canvas.json, normalized);
@@ -116,7 +166,7 @@
       var options = {
         animateRotate: false,
         animation: false,
-        tooltipTemplate: "<%= label %>: " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>")
+        tooltipTemplate: "<%= label %>: " + valueFormat
       };
 
       canvas.chart = new Chart(context).Pie(chartData, options);
@@ -127,14 +177,12 @@
         animation: false,
         bezierCurve: false,
         datasetFill: false,
-        multiTooltipTemplate: "<%= datasetLabel %> – " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>"),
+        multiTooltipTemplate: "<%= datasetLabel %> – " + valueFormat,
         pointHitDetectionRadius: 5,
         scaleBeginAtZero: true,
         scaleLabel: "<%= value %>" + (normalized ? "%" : ""),
         tooltipTemplate: (
-          showLabel ?
-          "<%= label %>: <%= datasetLabel %> – " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>") :
-          "<%= label %>: " + (normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>")
+          showLabel ? ("<%= label %>: <%= datasetLabel %> – " + valueFormat) : ("<%= label %>: " + valueFormat)
         ),
       };
 
@@ -152,23 +200,21 @@
   }
 
   function lineChartDataFromJSON(json, range, normalized) {
-    var index = -1;
-
-    var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
     var labels = json.months.map(function(ym) {
       var yearMonth = ym.split('-');
-      return monthNames[parseInt(yearMonth[1], 10) - 1] + " " + yearMonth[0].substring(2);
+      var year = yearMonth[0];
+      var month = parseInt(yearMonth[1], 10);
+
+      return MONTH_NAMES[month - 1] + " " + year.substring(2);
     });
 
-    var datasets = json.series.map(function(s) {
-      index += 1;
-      var hue = 360 / json.series.length * index;
-      var color = s[0] === "Other" ? "#999" : "hsl(" + hue + ", 70%, 60%)";
+    var datasets = json.series.map(function(s, index) {
+      var color = datasetColor(s[0], index, json.series.length);
+      var amounts = normalized ? (s.length > 2 ? s[2] : s[1]) : s[1];
 
       return {
         label: s[0],
-        data: normalized ? (s.length > 2 ? s[2] : s[1]) : s[1],
+        data: amounts,
         strokeColor: color,
         pointColor: color,
         pointStrokeColor: "#fff",
@@ -192,15 +238,10 @@
   }
 
   function pieChartDataFromJSON(json, normalized) {
-    var index = -1;
-
-    return json.series.map(function(s) {
-      index += 1;
-      var hue = 360 / json.series.length * index;
-      var color = s[0] === "Other" ? "#999" : "hsl(" + hue + ", 70%, 60%)";
-      var highlight = s[0] === "Other" ? "#aaa" : "hsl(" + hue + ", 70%, 70%)";
-
+    return json.series.map(function(s, index) {
       var amounts = normalized ? (s.length > 2 ? s[2] : s[1]) : s[1];
+      var color = datasetColor(s[0], index, json.series.length);
+      var highlight = highlightColor(s[0], index, json.series.length);
 
       return {
         label: s[0],
@@ -210,4 +251,23 @@
       };
     })
   }
+
+  function datasetColor(label, index, total) {
+    if (label === 'Other') {
+      return '#999';
+    } else {
+      var hue = 360 / total * index;
+      return "hsl(" + hue + ", 70%, 60%)";
+    }
+  }
+
+  function highlightColor(label, index, total) {
+    if (label === 'Other') {
+      return '#aaa';
+    } else {
+      var hue = 360 / total * index;
+      return "hsl(" + hue + ", 70%, 70%)";
+    }
+  }
+
 })();
