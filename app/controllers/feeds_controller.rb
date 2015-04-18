@@ -36,6 +36,7 @@ class FeedsController < ApplicationController
     @feed = Feed.new(feed_params)
 
     if @feed.save
+      @feed.load_contents
       redirect_to feeds_path, notice: 'Feed was successfully created.'
     else
       render :new
@@ -47,6 +48,7 @@ class FeedsController < ApplicationController
 
   def update
     if @feed.update_attributes(feed_params)
+      @feed.load_if_needed
       redirect_to feeds_path, notice: 'Feed was successfully updated.'
     else
       render :edit
