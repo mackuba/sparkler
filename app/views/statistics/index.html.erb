@@ -4,7 +4,7 @@
   <section class="report">
     <h2><%= report[:title] %></h2>
 
-    <% if report[:title] == "Total feed downloads" %>
+    <% if report[:is_downloads] %>
       <p class="info">Only requests that include system profile info are included (submitted once
         a week on average and only for users who explicitly agreed).</p>
     <% end %>
@@ -13,7 +13,7 @@
       <a href="#" data-range="all" class="selected">All data</a>
       <a href="#" data-range="year">Last year</a>
 
-      <% unless report[:title] == "Total feed downloads" %>
+      <% unless report[:is_downloads] %>
         <a href="#" data-range="month">This month</a>
 
         <% if @include_counts %>
@@ -25,7 +25,11 @@
       <% end %>
     </nav>
 
-    <canvas></canvas>
+    <canvas
+      data-range="all"
+      data-normalized="<%= !report[:is_downloads] %>"
+      data-labels="<%= !report[:is_downloads] %>">
+    </canvas>
 
     <script type="application/json">
       <%== report.to_json %>

@@ -99,8 +99,9 @@
     var title = $.findOne('h2', report);
 
     $.find('canvas', report).forEach(function(canvas) {
-      canvas.range = 'all';
-      canvas.normalized = (title.innerText !== "Total feed downloads");
+      canvas.range = canvas.getAttribute('data-range');
+      canvas.normalized = (canvas.getAttribute('data-normalized') === 'true');
+      canvas.showLabels = (canvas.getAttribute('data-labels') === 'true');
 
       createChart(canvas);
     });
@@ -159,24 +160,22 @@
     }
 
     var context = canvas.getContext('2d');
-    var showLabel = (canvas.json.series[0].title !== "Downloads");
+
     var fracValueFormat = canvas.normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
     var intValueFormat = canvas.normalized ? "<%= value %>%" : "<%= value %>";
 
     if (canvas.range === 'month') {
       var chartData = pieChartDataFromJSON(canvas.json, canvas.normalized);
 
-      var options = {
+      canvas.chart = new Chart(context).Pie(chartData, {
         animateRotate: false,
         animation: false,
         tooltipTemplate: "<%= label %>: " + fracValueFormat
-      };
-
-      canvas.chart = new Chart(context).Pie(chartData, options);
+      });
     } else {
       var chartData = lineChartDataFromJSON(canvas.json, canvas.range, canvas.normalized);
 
-      var options = {
+      canvas.chart = new Chart(context).Line(chartData, {
         animation: false,
         bezierCurve: false,
         datasetFill: false,
@@ -185,14 +184,14 @@
         scaleBeginAtZero: true,
         scaleLabel: intValueFormat,
         tooltipTemplate: (
-          showLabel ? ("<%= label %>: <%= datasetLabel %> – " + fracValueFormat) : ("<%= label %>: " + fracValueFormat)
+          canvas.showLabels ?
+          ("<%= label %>: <%= datasetLabel %> – " + fracValueFormat) :
+          ("<%= label %>: " + fracValueFormat)
         ),
-      };
-
-      canvas.chart = new Chart(context).Line(chartData, options);
+      });
     }
 
-    if (showLabel) {
+    if (canvas.showLabels) {
       var legend = $.findOne('.legend', $.parentSection(canvas));
       if (legend) {
         legend.innerHTML = canvas.chart.generateLegend();

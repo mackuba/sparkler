@@ -3,7 +3,8 @@ class FeedReport
     'Total feed downloads' => {
       :field => 'osVersion',
       :group_by => lambda { |v| "Downloads" },
-      :only_counts => true
+      :only_counts => true,
+      :is_downloads => true
     },
     'OS X Version' => {
       :field => 'osVersion',
@@ -234,7 +235,10 @@ class FeedReport
         data_lines.each { |dataset| dataset.delete(:amounts) }
       end
 
-      @reports.push({ title: report_title, months: @months, series: data_lines })
+      report = { title: report_title, months: @months, series: data_lines }
+      report[:is_downloads] = true if options[:is_downloads]
+
+      @reports.push(report)
     end
   end
 end
