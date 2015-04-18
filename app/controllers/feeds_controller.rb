@@ -10,7 +10,7 @@ class FeedsController < ApplicationController
     save_statistics(@feed) if request_from_sparkle?
 
     if @feed.contents
-      render :body => @feed.contents
+      render body: @feed.contents
     else
       head :not_found
     end

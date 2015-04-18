@@ -7,7 +7,7 @@
 
   <% @feeds.each do |feed| %>
     <section class="feed">
-      <%= render :partial => 'feed', :locals => { :feed => feed } %>
+      <%= render partial: 'feed', locals: { feed: feed } %>
     </section>
   <% end %>
 

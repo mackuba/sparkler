@@ -9,7 +9,7 @@ set :deploy_to, "/var/www/sparkle"
 set :deploy_via, :remote_cache
 set :migrate_env, "RACK_ENV=production"
 
-server "matterhorn", :app, :web, :db, :primary => true
+server "matterhorn", :app, :web, :db, primary: true
 
 after 'deploy:update_code', 'deploy:link_configs'
 
@@ -17,7 +17,7 @@ after 'deploy', 'deploy:cleanup'
 after 'deploy:migrations', 'deploy:cleanup'
 
 namespace :deploy do
-  task :restart, :roles => :web do
+  task :restart, roles: :web do
     run "touch #{current_path}/tmp/restart.txt"
   end
 
