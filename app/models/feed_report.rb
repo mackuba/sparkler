@@ -105,11 +105,13 @@ class FeedReport
     }
   }
 
+  YM_FORMAT = "DATE_FORMAT(date, '%Y-%m')"
+
   def initialize(feed, options = {})
     @feed = feed
     @include_counts = options[:include_counts]
 
-    @months = feed.statistics.select('DISTINCT year, month').order('year, month').map { |r| [r.year, r.month] }
+    @months = feed.statistics.select("DISTINCT #{YM_FORMAT} AS ym").order('ym').map(&:ym)
 
     calculate_stats
     generate_reports
@@ -118,11 +120,14 @@ class FeedReport
   def calculate_stats
     @stats = {}
 
-    @feed.statistics.each do |stat|
-      ym = [stat.year, stat.month]
+    grouped_statistics = @feed.statistics
+      .select("#{YM_FORMAT} AS ym, property_id, option_id, SUM(counter) AS total_for_month")
+      .group("ym, property_id, option_id")
+
+    grouped_statistics.each do |stat|
       property_stats = @stats[stat.property_id] ||= {}
       option_stats = property_stats[stat.option_id] ||= {}
-      option_stats[ym] = stat.counter
+      option_stats[stat.ym] = stat.total_for_month
     end
 
     @sums = {}

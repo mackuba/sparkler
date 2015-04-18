@@ -74,12 +74,7 @@ class Feed < ActiveRecord::Base
     property = Property.find_or_create_by(name: property_name)
     option = property.options.find_or_create_by(name: option_name)
 
-    statistic = self.statistics.find_or_create_by(
-      year: timestamp.year,
-      month: timestamp.month,
-      property: property,
-      option: option
-    )
+    statistic = self.statistics.find_or_create_by(date: Date.today, property: property, option: option)
 
     Statistic.update_counters(statistic.id, counter: 1)
   end

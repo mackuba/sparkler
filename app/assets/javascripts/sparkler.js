@@ -156,8 +156,9 @@
 
     var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    var labels = json.months.map(function(m) {
-      return monthNames[m[1] - 1] + " " + m[0].toString().substring(2);
+    var labels = json.months.map(function(ym) {
+      var yearMonth = ym.split('-');
+      return monthNames[parseInt(yearMonth[1], 10) - 1] + " " + yearMonth[0].substring(2);
     });
 
     var datasets = json.series.map(function(s) {
