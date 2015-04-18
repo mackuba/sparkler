@@ -119,9 +119,7 @@
     var link = event.target;
     var section = $.parentSection(link);
 
-    var buttons = $.find('a', section);
-    buttons.forEach(function(a) { a.classList.remove('selected') });
-    link.classList.add('selected');
+    selectOnlyLink(link);
 
     var checkbox = $.findOne('.denormalize', section);
     var title = $.findOne('h2', section);
@@ -137,6 +135,12 @@
     var canvas = $.findOne('canvas', $.parentSection(checkbox));
 
     createChart(canvas, !checkbox.checked);
+  }
+
+  function selectOnlyLink(link) {
+    var allLinks = $.find('a', link.parentElement);
+    allLinks.forEach(function(a) { a.classList.remove('selected') });
+    link.classList.add('selected');
   }
 
   function createChart(canvas, normalized) {
@@ -158,7 +162,8 @@
 
     var context = canvas.getContext('2d');
     var showLabel = (canvas.json.series[0].title !== "Downloads");
-    var valueFormat = normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
+    var fracValueFormat = normalized ? "<%= $.formatPercent(value) %>" : "<%= value %>";
+    var intValueFormat = normalized ? "<%= value %>%" : "<%= value %>";
 
     if (canvas.range === 'month') {
       var chartData = pieChartDataFromJSON(canvas.json, normalized);
@@ -166,7 +171,7 @@
       var options = {
         animateRotate: false,
         animation: false,
-        tooltipTemplate: "<%= label %>: " + valueFormat
+        tooltipTemplate: "<%= label %>: " + fracValueFormat
       };
 
       canvas.chart = new Chart(context).Pie(chartData, options);
@@ -177,12 +182,12 @@
         animation: false,
         bezierCurve: false,
         datasetFill: false,
-        multiTooltipTemplate: "<%= datasetLabel %> – " + valueFormat,
+        multiTooltipTemplate: "<%= datasetLabel %> – " + fracValueFormat,
         pointHitDetectionRadius: 5,
         scaleBeginAtZero: true,
-        scaleLabel: "<%= value %>" + (normalized ? "%" : ""),
+        scaleLabel: intValueFormat,
         tooltipTemplate: (
-          showLabel ? ("<%= label %>: <%= datasetLabel %> – " + valueFormat) : ("<%= label %>: " + valueFormat)
+          showLabel ? ("<%= label %>: <%= datasetLabel %> – " + fracValueFormat) : ("<%= label %>: " + fracValueFormat)
         ),
       };
 
