@@ -9,21 +9,23 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <nav class="left">
-      <% if logged_in? && !(params[:controller] == 'feeds' && params[:action] == 'index') %>
-        <%= link_to "< Feed List", feeds_path %>
-      <% end %>
-    </nav>
+    <div class="body-wrapper">
+      <nav class="left">
+        <% if logged_in? && !(params[:controller] == 'feeds' && params[:action] == 'index') %>
+          <%= link_to "< Feed List", feeds_path %>
+        <% end %>
+      </nav>
 
-    <nav class="right">
-      <% if logged_in? %>
-        <%= link_to "Account", edit_user_path %>
-        <%= link_to "Log out", logout_user_path %>
-      <% else %>
-        <%= link_to "Log in", login_form_user_path %>
-      <% end %>
-    </nav>
+      <nav class="right">
+        <% if logged_in? %>
+          <%= link_to "Account", edit_user_path %>
+          <%= link_to "Log out", logout_user_path %>
+        <% else %>
+          <%= link_to "Log in", login_form_user_path %>
+        <% end %>
+      </nav>
 
-    <%= yield %>
+      <%= yield %>
+    </div>
   </body>
 </html>

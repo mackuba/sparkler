@@ -3,15 +3,21 @@ html {
 }
 
 body {
-  width: 800px;
-  margin: 0 auto;
+  position: relative;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1.4rem;
   color: #333;
   -webkit-font-smoothing: antialiased;
+  padding-bottom: 2rem;
 }
 
-body > nav {
+.body-wrapper {
+  overflow: hidden;
+  margin: 0 auto;
+  width: 800px;
+}
+
+.body-wrapper > nav {
   position: absolute;
   top: 3rem;
   font-size: 1.4rem;
@@ -241,4 +247,14 @@ form {
   border: 1px solid hsl(120, 40%, 88%);
   padding: 1.5rem;
   margin-bottom: 2.5rem;
+}
+
+footer {
+  position: absolute;
+  bottom: 3rem;
+  right: 3rem;
+  font-size: 1.3rem;
+  color: #333;
+
+  a { color: #666; }
 }
