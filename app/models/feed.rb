@@ -58,7 +58,7 @@ class Feed < ActiveRecord::Base
     xml = Nokogiri::XML(contents)
     first_item = xml.css('item').first
     enclosure = first_item && first_item.css('enclosure').first
-    enclosure && enclosure['sparkle:version']
+    enclosure && (enclosure['sparkle:shortVersionString'] || enclosure['sparkle:version'])
   end
 
   def save_params(timestamp, params, user_agent)
