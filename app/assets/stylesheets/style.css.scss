@@ -190,6 +190,7 @@ form {
   label {
     display: block;
     margin-bottom: 0.5rem;
+    font-weight: 500;
   }
 
   input:disabled + label {
@@ -203,6 +204,24 @@ form {
       display: inline;
       vertical-align: middle;
       margin-left: 0.2rem;
+      font-weight: normal;
+    }
+  }
+
+  .field {
+    margin-bottom: 1.5rem;
+  }
+
+  .field-info {
+    font-size: 1.2rem;
+    color: #666;
+    display: block;
+    margin-bottom: 0.5rem;
+    margin-top: -0.3rem;
+
+    &::before {
+      content: "ⓘ ";
+      color: black;
     }
   }
 
@@ -214,10 +233,6 @@ form {
   input[type=submit] {
     margin-right: 0.3rem;
   }
-}
-
-.field {
-  margin-bottom: 1rem;
 }
 
 .actions {
