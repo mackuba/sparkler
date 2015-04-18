@@ -71,6 +71,6 @@ class FeedsController < ApplicationController
   end
 
   def save_statistics(feed)
-    feed.save_params(Time.now, request.params, request.user_agent)
+    StatisticSaver.new(feed).save_params(request.params, request.user_agent)
   end
 end
