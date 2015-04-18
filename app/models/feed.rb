@@ -25,7 +25,7 @@ class Feed < ActiveRecord::Base
     self.last_version = version_from_contents(text)
     self.load_error = nil
     save!
-  rescue OpenURI::HTTPError => error
+  rescue OpenURI::HTTPError, RuntimeError, SocketError, SystemCallError => error
     logger.error "Couldn't download feed from #{url}: #{error}"
 
     self.load_error = error
