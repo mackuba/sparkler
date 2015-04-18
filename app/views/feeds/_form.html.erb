@@ -16,7 +16,11 @@
     <%= f.text_field :title %>
   </div>
   <div class="field">
-    <%= f.label :url %>
+    <%= f.label :name, "Name (for URL)" %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :url, "Source URL" %>
     <%= f.text_field :url %>
   </div>
   <div class="field checkbox">

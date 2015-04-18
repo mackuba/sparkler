@@ -2,8 +2,7 @@ require 'open-uri'
 
 class Feed < ActiveRecord::Base
   has_many :statistics
-  validates_presence_of :title, :url
-  validates_presence_of :name, if: lambda { |u| u.title.present? }
+  validates_presence_of :title, :name, :url
 
   after_create :add_to_list
 
@@ -16,11 +15,6 @@ class Feed < ActiveRecord::Base
   def self.get_by_name(name)
     feed = all_feeds.detect { |f| f.name == name }
     feed or raise ActiveRecord::RecordNotFound.new("Couldn't find Feed with name='#{name}'")
-  end
-
-  def title=(title)
-    write_attribute :name, title.downcase.gsub(/\W+/, '_') if title
-    write_attribute :title, title
   end
 
   def to_param
