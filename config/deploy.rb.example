@@ -1,22 +1,26 @@
+# this makes capistrano run 'bundle install' automatically with the proper arguments
+# deploy/assets loaded from Capfile makes it also run 'rake asset:precompile' automatically
 require 'bundler/capistrano'
 
 set :application, "sparkle"
-set :repository, "git@github.com:jsuder/sparkler.git"
+set :repository, "https://github.com/mackuba/sparkler.git"
 set :scm, :git
 set :keep_releases, 5
 set :use_sudo, false
-set :deploy_to, "/var/www/sparkle"
 set :deploy_via, :remote_cache
-set :migrate_env, "RACK_ENV=production"
 
-server "matterhorn", :app, :web, :db, primary: true
+# this is the path of the directory where the app will be deployed on your server
+set :deploy_to, "/var/www/sparkle"
+
+# enter name or IP of your server here
+server "myserver.com", :app, :web, :db, primary: true
 
 after 'deploy:update_code', 'deploy:link_configs'
-
 after 'deploy', 'deploy:cleanup'
 after 'deploy:migrations', 'deploy:cleanup'
 
 namespace :deploy do
+  # if you use a different app server than Passenger, you will need to customize this task
   task :restart, roles: :web do
     run "touch #{current_path}/tmp/restart.txt"
   end
