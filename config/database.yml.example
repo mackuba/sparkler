@@ -13,3 +13,7 @@ development:
 test:
   <<: *default
   database: sparkler_test
+
+production:
+  <<: *default
+  database: sparkler_production
