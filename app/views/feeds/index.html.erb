@@ -6,7 +6,7 @@
   <% end %>
 
   <% @feeds.each do |feed| %>
-    <section class="feed">
+    <section class="feed <%= 'inactive' if feed.inactive? %>">
       <%= render partial: 'feed', locals: { feed: feed } %>
     </section>
   <% end %>

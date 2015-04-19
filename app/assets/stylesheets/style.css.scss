@@ -71,6 +71,11 @@ a {
   border-radius: 5px;
   background: hsl($blue, 80%, 97%);
 
+  &.inactive {
+    background: #f6f6f6;
+    border-color: #ddd;
+  }
+
   h2 {
     margin: 0 0 2rem;
     font-size: 2rem;
@@ -195,17 +200,6 @@ form {
     color: #888;
   }
 
-  .checkbox {
-    margin: 1.5rem 0;
-
-    label {
-      display: inline;
-      vertical-align: middle;
-      margin-left: 0.2rem;
-      font-weight: normal;
-    }
-  }
-
   .field {
     margin-bottom: 1.5rem;
   }
@@ -220,6 +214,22 @@ form {
     &::before {
       content: "ⓘ ";
       color: black;
+    }
+  }
+
+  .checkbox {
+    margin: 1.5rem 0;
+
+    label {
+      display: inline;
+      vertical-align: middle;
+      margin-left: 0.2rem;
+      font-weight: normal;
+    }
+
+    .field-info {
+      margin-top: 0.2rem;
+      margin-left: 1.8rem;
     }
   }
 

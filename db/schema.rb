@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150418181426) do
+ActiveRecord::Schema.define(version: 20150419110659) do
 
   create_table "feeds", force: :cascade do |t|
     t.string  "title",         limit: 255,                   null: false
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20150418181426) do
     t.text    "contents",      limit: 65535
     t.string  "last_version",  limit: 255
     t.string  "load_error",    limit: 255
+    t.boolean "inactive",      limit: 1,     default: false, null: false
   end
 
   create_table "options", force: :cascade do |t|

@@ -1,52 +1,57 @@
 <h2><%= feed.title %></h2>
 
-<p>URL: <%= link_to feed_url(feed), feed %></p>
+<% if feed.active? %>
+  <p>URL: <%= link_to feed_url(feed), feed %></p>
 
-<p>
-  Stats access:
-  <% if feed.public_stats && feed.public_counts %>
-    <span class="status">Public</span>
-  <% elsif feed.public_stats %>
-    <span class="status">Public (only percentages)</span>
-  <% else %>
-    <span class="status">Private</span>
-  <% end %>
-</p>
-
-<p>
-  Status:
-  <% if feed.loaded? %>
-    <% if feed.last_version %>
-      <span class="status">OK</span>
+  <p>
+    Stats access:
+    <% if feed.public_stats && feed.public_counts %>
+      <span class="status">Public</span>
+    <% elsif feed.public_stats %>
+      <span class="status">Public (only percentages)</span>
     <% else %>
-      <span class="status-error">No versions found</span>
+      <span class="status">Private</span>
     <% end %>
-  <% elsif feed.load_error %>
-    <span class="status-error">Error: <%= feed.load_error %></span>
-  <% else %>
-    <span class="status">Not loaded yet</span>
-  <% end %>
-</p>
+  </p>
 
-<p>
-  Last version:
-  <% if feed.loaded? && feed.last_version %>
-    <span class="status"><%= feed.last_version %></span>
-  <% else %>
-    <span class="status">?</span>
-  <% end %>
-</p>
+  <p>
+    Status:
+    <% if feed.loaded? %>
+      <% if feed.last_version %>
+        <span class="status">OK</span>
+      <% else %>
+        <span class="status-error">No versions found</span>
+      <% end %>
+    <% elsif feed.load_error %>
+      <span class="status-error">Error: <%= feed.load_error %></span>
+    <% else %>
+      <span class="status">Not loaded yet</span>
+    <% end %>
+  </p>
+
+  <p>
+    Last version:
+    <% if feed.loaded? && feed.last_version %>
+      <span class="status"><%= feed.last_version %></span>
+    <% else %>
+      <span class="status">?</span>
+    <% end %>
+  </p>
+<% end %>
 
 <div class="actions">
-  <%= link_to "See statistics", feed_statistics_path(feed) %>
+  <% if feed.active? %>
+    <%= link_to "See statistics", feed_statistics_path(feed) %>
 
-  <span class="separator">&bull;</span>
+    <span class="separator">&bull;</span>
 
-  <%= link_to(feed.loaded? || feed.load_error ? "Reload data" : "Load data", reload_feed_path(feed), class: 'reload') %>
-  <%= image_tag 'spinner.gif', class: 'reload-spinner' %> <!-- thx to http://preloaders.net -->
+    <%= link_to(feed.loaded? || feed.load_error ? "Reload data" : "Load data",
+          reload_feed_path(feed), class: 'reload') %>
 
-  <span class="separator">&bull;</span>
+    <%= image_tag 'spinner.gif', class: 'reload-spinner' %> <!-- thx to http://preloaders.net -->
+
+    <span class="separator">&bull;</span>
+  <% end %>
 
   <%= link_to "Edit", edit_feed_path(feed) %>
-
 </div>

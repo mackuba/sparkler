@@ -40,6 +40,14 @@
     <%= f.label :public_counts, "Make download counts visible to everyone" %>
   </div>
 
+  <% if @feed.persisted? %>
+    <div class="field checkbox">
+      <%= f.check_box :inactive %>
+      <%= f.label :inactive, "Make feed inactive" %>
+      <span class="field-info">This makes both the feed and its stats page inaccessible to anyone.</span>
+    </div>
+  <% end %>
+
   <div class="actions">
     <%= f.submit %> or <%= link_to 'Cancel', feeds_path %>
   </div>

@@ -1,9 +1,10 @@
 class FeedsController < ApplicationController
-  before_action :set_feed, only: [:show, :reload, :edit, :update]
-  before_action :require_admin, except: :show
+  before_action :set_feed, only: [:reload, :edit, :update]
+  before_action :set_active_feed, only: [:show]
+  before_action :require_admin, except: [:show]
 
   def index
-    @feeds = Feed.order('title')
+    @feeds = Feed.order('inactive, title')
   end
 
   def show
@@ -59,11 +60,15 @@ class FeedsController < ApplicationController
   private
 
   def feed_params
-    params.require(:feed).permit(:title, :name, :url, :public_stats, :public_counts)
+    params.require(:feed).permit(:title, :name, :url, :public_stats, :public_counts, :inactive)
   end
 
   def set_feed
     @feed = Feed.find_by_name!(params[:id])
+  end
+
+  def set_active_feed
+    @feed = Feed.active.find_by_name!(params[:id])
   end
 
   def request_from_sparkle?

@@ -11,8 +11,15 @@ class Feed < ActiveRecord::Base
 
   before_save :reset_if_url_changed
 
+  scope :active, -> { where(inactive: false) }
+
+
   def to_param
     name
+  end
+
+  def active?
+    !inactive
   end
 
   def loaded?
