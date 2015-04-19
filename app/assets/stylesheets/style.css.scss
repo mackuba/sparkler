@@ -210,11 +210,6 @@ form {
     display: block;
     margin-bottom: 0.5rem;
     margin-top: -0.3rem;
-
-    &::before {
-      content: "ⓘ ";
-      color: black;
-    }
   }
 
   .checkbox {
