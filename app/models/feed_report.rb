@@ -236,7 +236,13 @@ class FeedReport
       end
 
       report = { title: report_title, months: @months, series: data_lines }
+
       report[:is_downloads] = true if options[:is_downloads]
+      report[:initial_range] = case @months.length
+        when 1 then 'month'
+        when 2..12 then 'year'
+        else 'all'
+      end
 
       @reports.push(report)
     end

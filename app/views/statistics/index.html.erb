@@ -10,11 +10,13 @@
     <% end %>
 
     <nav>
-      <a href="#" data-range="all" class="selected">All data</a>
-      <a href="#" data-range="year">Last year</a>
+      <%= link_to 'All data', '#', data: { range: 'all' }, class: ('selected' if report[:initial_range] == 'all') %>
+      <%= link_to 'Last year', '#', data: { range: 'year' }, class: ('selected' if report[:initial_range] == 'year') %>
 
       <% unless report[:is_downloads] %>
-        <a href="#" data-range="month">This month</a>
+        <%= link_to 'This month', '#',
+              data: { range: 'month' },
+              class: ('selected' if report[:initial_range] == 'month') %>
 
         <% if @include_counts %>
           <span class="button">
@@ -26,7 +28,7 @@
     </nav>
 
     <canvas
-      data-range="all"
+      data-range="<%= report[:initial_range] %>"
       data-normalized="<%= !report[:is_downloads] %>"
       data-labels="<%= !report[:is_downloads] %>">
     </canvas>
