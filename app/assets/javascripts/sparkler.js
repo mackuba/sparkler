@@ -183,11 +183,7 @@
         pointHitDetectionRadius: 5,
         scaleBeginAtZero: true,
         scaleLabel: intValueFormat,
-        tooltipTemplate: (
-          canvas.showLabels ?
-          ("<%= label %>: <%= datasetLabel %> – " + fracValueFormat) :
-          ("<%= label %>: " + fracValueFormat)
-        ),
+        tooltipTemplate: "<%= label %>: " + (canvas.showLabels ? "<%= datasetLabel %> – " : "") + fracValueFormat
       });
     }
 
