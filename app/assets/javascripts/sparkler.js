@@ -151,7 +151,7 @@
     if (!canvas.json) {
       var script = $.findOne('script', $.parentSection(canvas));
 
-      if (!script || script.getAttribute('type') !== 'application/json') {
+      if (!script || script.type !== 'application/json') {
         $.log('Error: no data found for canvas.');
         return;
       }
