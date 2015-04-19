@@ -211,22 +211,20 @@ class FeedReport
           end
         end
         
-        unless options[:show_other] == false
-          other_dataset = {
-            title: "Other",
-            is_other: true,
-            amounts: other.reduce([0] * @months.length) { |sum, dataset|
-              sum.each_with_index { |x, i| sum[i] += dataset[:amounts][i] }
-              sum
-            },
-            normalized: other.reduce([0] * @months.length) { |sum, dataset|
-              sum.each_with_index { |x, i| sum[i] += dataset[:normalized][i] }
-              sum
-            }
+        other_dataset = {
+          title: "Other",
+          is_other: true,
+          amounts: other.reduce([0] * @months.length) { |sum, dataset|
+            sum.each_with_index { |x, i| sum[i] += dataset[:amounts][i] }
+            sum
+          },
+          normalized: other.reduce([0] * @months.length) { |sum, dataset|
+            sum.each_with_index { |x, i| sum[i] += dataset[:normalized][i] }
+            sum
           }
-        
-          data_lines.push(other_dataset)
-        end
+        }
+      
+        data_lines.push(other_dataset)
       end
 
       if options[:only_counts]
@@ -238,6 +236,7 @@ class FeedReport
       report = { title: report_title, months: @months, series: data_lines }
 
       report[:is_downloads] = true if options[:is_downloads]
+      report[:show_other] = false if options[:show_other] == false
       report[:initial_range] = case @months.length
         when 1 then 'month'
         when 2..12 then 'year'

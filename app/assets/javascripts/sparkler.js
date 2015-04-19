@@ -206,7 +206,15 @@
       return MONTH_NAMES[month - 1] + " " + year.substring(2);
     });
 
-    var datasets = json.series.map(function(s, index) {
+    var series = json.series;
+
+    if (json.show_other === false) {
+      series = series.filter(function(s) {
+        return !s.is_other;
+      });
+    }
+
+    var datasets = series.map(function(s, index) {
       var color = datasetColor(s, index, json.series.length);
       var amounts = normalized && s.normalized || s.amounts;
 
