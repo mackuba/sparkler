@@ -50,7 +50,7 @@
       error: function() {
         spinner.style.display = 'none';
         reloadLink.style.display = 'inline';
-        reloadLink.innerText = 'Try again';
+        reloadLink.textContent = 'Try again';
       }
     });
   }
@@ -156,7 +156,7 @@
         return;
       }
 
-      canvas.json = JSON.parse(script.innerText);
+      canvas.json = JSON.parse(script.textContent);
     }
 
     var context = canvas.getContext('2d');
