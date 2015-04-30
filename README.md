@@ -237,6 +237,6 @@ location /feed/foobar {
 
 ## Credits & contributing
 
-Copyright © 2015 [Kuba Suder](https://github.com/mackuba). Licensed under VSL ([Very Simple License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt), a simplified version of the MIT license that fits in 3 lines).
+Copyright © 2015 [Kuba Suder](https://github.com/mackuba). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
 
 If you have any ideas for new features, improvements and bug fixes, pull requests are very welcome. (Just make sure you follow the existing code formatting style since I have a bit of an OCD...)
