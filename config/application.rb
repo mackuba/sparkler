@@ -16,7 +16,7 @@ Bundler.require(*Rails.groups)
 
 module Sparkler
   class Application < Rails::Application
-    VERSION = '1.0'
+    VERSION = '0.9'
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
