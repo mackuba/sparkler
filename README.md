@@ -2,6 +2,8 @@
 
 Sparkler is a web application written in Ruby on Rails that collects system profile statistics from Mac OS X apps using [Sparkle updater library](http://sparkle-project.org).
 
+[![Travis build status](https://travis-ci.org/mackuba/sparkler.svg)](https://travis-ci.org/mackuba/sparkler)
+
 ## What it does
 
 Sparkle is a very popular library used by a significant percentage of (non-app-store) Mac OS X apps, created by [Andy Matuschak](http://andymatuschak.org) and now maintained by [porneL](https://github.com/pornel). Apps use it to check if a newer version is available and present the familiar "A new version of X is available!" dialog to the users.
