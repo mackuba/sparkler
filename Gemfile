@@ -11,9 +11,7 @@ gem 'open_uri_redirections'
 
 group :development do
   gem 'capistrano', '~> 2.15.1'
-end
 
-group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
@@ -22,7 +20,9 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background
   gem 'spring'
+end
 
+group :test do
   gem 'rspec'
   gem 'rspec-rails'
 end
