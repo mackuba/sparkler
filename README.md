@@ -66,9 +66,9 @@ Remember to also open the HTTP(S) ports on your firewall.
 
 ### Ruby app server
 
-There are several different competing Ruby app servers, but most of them require running additional server processes in the background that need to be separately monitored, restarted if they go down etc. The one that's easiest to set up and use (IMHO) is [Passenger by Phusion](https://www.phusionpassenger.com), which integrates with Apache or Nginx and uses the web server to launch itself automatically. Follow the [instructions on their website](https://www.phusionpassenger.com/documentation/Users%20guide%20Nginx.html#install_on_debian_ubuntu) to set it up.
+There are several different competing Ruby app servers, but most of them require running additional server processes in the background that need to be separately monitored, restarted if they go down etc. The one that's easiest to set up and use (IMHO) is [Passenger by Phusion](https://www.phusionpassenger.com), which integrates with Apache or Nginx and uses the web server to launch itself automatically. Follow the [instructions on their website](https://www.phusionpassenger.com/documentation/Users%20guide%20Nginx.html#installation) to set it up.
 
-Once you have Nginx and Passenger installed, you'll need to add a server block like this to your Nginx config:
+Once you have Nginx and Passenger installed, you'll need to add a server block to your Nginx config that looks something like this:
 
 ```
 server {
@@ -129,7 +129,7 @@ This will create the following directories in the specified location:
 
 After you run this, log in to your server, go to `/your-app-location/shared/config` and create two files there:
 
-- `database.yml` based on the `config/database.yml.example` file from the Sparkler repo - fill it in with your chosen database name (under `production`), database user and password
+- `database.yml` based on the [config/database.yml.example](https://github.com/mackuba/sparkler/blob/master/config/database.yml.example) file from the Sparkler repo - fill it in with your chosen database name (under `production`), database user and password
 - `secret_key_base.key` which needs to contain a long random string for encrypting cookie sessions - you can generate it by running `bin/rake secret` in the Sparkler directory on your machine
 
 You also need to actually create the specified database and set up the user/password in your MySQL.
@@ -140,7 +140,7 @@ Once this is done, you can deploy the latest version from your computer with thi
 bundle exec cap deploy:migrations
 ```
 
-Repeat this any time you want to update Sparkler to a new version.
+Repeat this any time you want to update Sparkler to a new version. This will deploy the latest version to a new subdirectory in `releases` and will change the `current` link to point to it.
 
 ### Installing the app directly on the server
 
@@ -180,24 +180,38 @@ The options for each feed are:
 
 The appcast location can be one of two things:
 
-- a URL to a remote file; for example, you can keep the appcast file in your repository and link Sparkler to the master version of the file, which will be automatically updated when you change the file and push the changes to the repo (e.g. the Gitifier appcast is located [here](https://raw.githubusercontent.com/nschum/Gitifier/master/Sparkle/gitifier_appcast.xml))
+- a URL to a remote file; for example, you can keep the appcast file in your repository and link Sparkler to the master version of the file, which will be updated when you change the file and push the changes to the repo (e.g. the Gitifier appcast is located [here](https://raw.githubusercontent.com/nschum/Gitifier/master/Sparkle/gitifier_appcast.xml))
 - a path to a local file, like `/var/www/foobarapp/appcast.xml`; this is useful if you prefer to keep the appcast on the same server and update it e.g. through FTP
 
-You can also configure how public the feed statistics page will be - you have three options:
+You can also configure access to the feed statistics page - you have three options:
 
 - private statistics page - only you can access it
 - public statistics page, but download counts are hidden - only you will see the "show absolute amounts" switches, everyone else will only see percentages
 - completely public statistics page - everyone can see all the data you can see there
 
-And finally, you can choose to make a feed inactive - this is almost like deleting it, except the data isn't actually deleted. This is because deleting a feed is a dangerous operation since you could accidentally lose years' worth of data, so it's better to just hide it from the view. If you're really sure that you want to completely delete a feed together with the data, do this manually in the database or a Rails console (`RAILS_ENV=production bin/rails console` in the project directory).
+And finally, you can choose to make a feed inactive - this is almost like deleting it, except the data isn't actually deleted. This is because deleting a feed is a dangerous operation since you could accidentally lose years' worth of data, so it's better to just hide it from the view. If you're really sure that you want to completely delete a feed together with the data, do this manually in the database or in a Rails console (run `RAILS_ENV=production bin/rails console` in the `current` directory on the server).
 
 ### Updating the Info.plist
 
 To collect the statistics, you need to update your app to make it load the appcast from the Sparkler server. Change the `SUFeedURL` key in your `Info.plist` to e.g. `http://your.server/feeds/foobar` (`/feed/foobar` also works as an alias to `/feeds/foobar`). Once you release the next update (and add it to the old appcast location!), the data should start coming in a few days at most depending on the amount of users you have.
 
+If you haven't done that before, you also need to add the `SUEnableSystemProfiling` key with value `YES` to tell Sparkle that you want it to send the system info in the GET parameters if the user agrees (more info on [Sparkle wiki](https://github.com/sparkle-project/Sparkle/wiki/System-Profiling)). Alternatively, you can ask the user for permission using a custom dialog and then set `SUSendProfileInfo = YES` in the user defaults if they accept it (setting it without asking might be considered not nice...).
+
+### Reusing an existing URL
+
+If you have complete control over the current appcast location (i.e. it's on your server), you might be able to reuse the existing URL by simply adding a redirect rule to your HTTP server config. That way, you don't need to change anything in the app (apart from perhaps enabling sending profile info at all, see above).
+
+For example, you could add something like this to Nginx config:
+
+```
+location /my/old/feed/location {
+    return 301 $scheme://$host/sparkle/feed/foo;
+}
+```
+
 ### Releasing new updates
 
-There's one caveat: the webapp caches the appcast file forever once it downloads it successfully - the feed would load much slower and less reliably for your users if it had to make requests to a remote server every time. However, this means that when you update the source appcast with a new entry, Sparkler will still serve the old version. 
+There's one caveat you need to remember about: the webapp caches the appcast file forever once it downloads it successfully - the feed would load much slower and less reliably for your users if it had to make requests to a remote server every time. However, this means that when you update the source appcast with a new entry, Sparkler will still serve the old version. 
 
 To fix this, you need to remember to go to the feeds index page on your Sparkler site and press the "Reload data" link under the given feed:
 
@@ -211,7 +225,7 @@ I don't expect to find many security issues in Sparkler itself since there isn't
 
 ## Switching back to a direct link to appcast
 
-If at any moment you decide not to use Sparkler anymore, you'll have to deal with the fact that users using older versions of your app will still make requests to the Sparkler URL to check for updates, so you have to keep that working. However, you can handle this by simply configuring your web server to redirect requests to that URL to the new location, e.g.:
+If at any moment you decide not to use Sparkler anymore, you'll have to deal with the fact that users using older versions of your app will still make requests to the Sparkler URL to check for updates, so you have to keep that working. However, you can handle this by simply configuring your web server to redirect requests made to that URL to the new location, e.g.:
 
 ```
 location /feed/foobar {
@@ -221,6 +235,6 @@ location /feed/foobar {
 
 ## Credits & contributing
 
-Copyright © 2015 [Kuba Suder](https://github.com/mackuba). Licensed under VSL (Very Simple License, a simplified version of the MIT license).
+Copyright © 2015 [Kuba Suder](https://github.com/mackuba). Licensed under VSL ([Very Simple License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt), a simplified version of the MIT license that fits in 3 lines).
 
 If you have any ideas for new features, improvements and bug fixes, pull requests are very welcome. (Just make sure you follow the existing code formatting style since I have a bit of an OCD...)
