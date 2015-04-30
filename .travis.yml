@@ -5,3 +5,6 @@ rvm:
   - 2.1
   - 2.2
 bundler_args: --without development production
+before_script:
+  - cp config/database.yml.example config/database.yml
+  - mysql -e 'CREATE DATABASE sparkler_test;'
