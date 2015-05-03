@@ -26,4 +26,5 @@ group :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'webmock'
+  gem 'safe_yaml', '>= 1.0.4'
 end
