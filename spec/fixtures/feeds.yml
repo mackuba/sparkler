@@ -2,3 +2,24 @@ feed1:
   name: chrome
   title: Google Chrome
   url: http://chrome.google.com/appcast.xml
+
+inactive:
+  name: old
+  title: Feed v1
+  url: http://archive.org/feed.xml
+  inactive: true
+
+public:
+  name: hive
+  title: Hive Mac
+  url: http://mac.hivewallet.com/feed
+  public_stats: true
+  public_counts: true
+
+public_no_counts:
+  name: adium
+  title: Adium IM
+  url: http://adium.im/feed.xml
+  public_stats: true
+  public_counts: false
+
