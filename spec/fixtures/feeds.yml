@@ -1,0 +1,4 @@
+feed1:
+  name: chrome
+  title: Google Chrome
+  url: http://chrome.google.com/appcast.xml

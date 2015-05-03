@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 describe Feed do
-  let!(:feed) { Feed.create!(name: 'feed', title: 'Feed', url: 'http://onet.pl') }
+  fixtures :feeds
+
+  let(:feed) { Feed.first }
   let(:last_version) { '2.0' }
   let(:xml) { %(
      <item>

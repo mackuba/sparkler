@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 describe StatisticSaver do
-  let(:feed) { Feed.create(name: 'feed', title: 'Feed', url: 'http://onet.pl') }
+  fixtures :feeds
+
+  let(:feed) { Feed.first }
   let(:date) { Date.today }
   subject { StatisticSaver.new(feed) }
 
