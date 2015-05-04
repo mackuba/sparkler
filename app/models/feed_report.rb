@@ -116,6 +116,7 @@ class FeedReport
     @feed = feed
     @include_counts = options[:include_counts]
     @properties = Property.all.includes(:options)
+    @definitions = options[:report_definitions] || REPORTS
 
     @months = feed.statistics.select("DISTINCT #{YM_FORMAT} AS ym").order('ym').map(&:ym)
 
@@ -161,7 +162,7 @@ class FeedReport
   def generate_reports
     @reports = []
 
-    REPORTS.each do |report_title, options|
+    @definitions.each do |report_title, options|
       next if options[:only_counts] && !@include_counts
 
       property = @properties.detect { |p| p.name == options[:field] } || Property.create!(name: options[:field])
