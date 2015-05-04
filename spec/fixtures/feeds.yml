@@ -9,6 +9,12 @@ inactive:
   url: http://archive.org/feed.xml
   inactive: true
 
+private:
+  name: secret
+  title: Secret Project
+  url: http://foo.bar.pl
+  public_stats: false
+
 public:
   name: hive
   title: Hive Mac

@@ -5,7 +5,7 @@ describe FeedsController do
 
   before { session[:logged_in] = true }
 
-  let(:feed) { Feed.first }
+  let(:feed) { feeds(:feed1) }
   let(:new_url) { 'http://foo.bar' }
 
   def self.it_should_require_admin(&block)
@@ -101,7 +101,7 @@ describe FeedsController do
     end
 
     context 'if feed is inactive' do
-      let(:feed) { Feed.where(inactive: true).first }
+      let(:feed) { feeds(:inactive) }
 
       it 'should return ActiveRecord::RecordNotFound' do
         expect { get :show, id: feed.name }.to raise_error(ActiveRecord::RecordNotFound)
