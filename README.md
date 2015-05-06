@@ -2,6 +2,8 @@
 
 Sparkler is a web application written in Ruby on Rails that collects system profile statistics from Mac OS X apps using [Sparkle updater library](http://sparkle-project.org).
 
+<a href="https://www.flickr.com/photos/lilcrabbygal/418166137" title="sparkler against night by Vanessa Pike-Russell, on Flickr"><img src="https://farm1.staticflickr.com/132/418166137_9c4d64dec4.jpg" width="360" alt="sparkler against night"></a>
+
 [![Travis build status](https://travis-ci.org/mackuba/sparkler.svg)](https://travis-ci.org/mackuba/sparkler)
 
 ## What it does
