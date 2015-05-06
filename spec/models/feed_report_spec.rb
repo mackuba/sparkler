@@ -152,7 +152,7 @@ describe FeedReport do
       subject.detect { |l| l[:title] == 'MacBook' }[:amounts].should == [1, 0, 1]
 
       subject.detect { |l| l[:title] == 'iMac' }[:normalized].should == [83.3, 100.0, 0.0]
-      subject.detect { |l| l[:title] == 'MacBook' }[:normalized].should == [16.6, 0.0, 100.0]
+      subject.detect { |l| l[:title] == 'MacBook' }[:normalized].should == [16.7, 0.0, 100.0]
     end
 
     it "should delete options that don't have any non-zero amounts" do
@@ -178,7 +178,7 @@ describe FeedReport do
         subject[0][:normalized].should == [44.4]
         subject[1][:title].should == 'mobile'
         subject[1][:amounts].should == [5]
-        subject[1][:normalized].should == [55.5]
+        subject[1][:normalized].should == [55.6]
       end
     end
 
@@ -322,7 +322,7 @@ describe FeedReport do
         subject.map { |l| l[:title] }.should == ['blue', 'green', 'red', 'yellow', 'Other']
 
         subject.last[:amounts].should == [0, 0, 2]
-        subject.last[:normalized].should == [0, 0, 28.4]
+        subject.last[:normalized].should == [0, 0, 28.6]
         subject.last[:is_other].should == true
       end
     end

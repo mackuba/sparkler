@@ -193,7 +193,7 @@ class FeedReport
         @months.each do |ym|
           amount = option_ids.sum { |option_id| count_for(property.id, option_id, ym) }
           total = sum_for(property.id, ym)
-          normalized = (total > 0) ? (amount * 1000 / total / 10.0) : 0
+          normalized = (total > 0) ? (amount * 100.0 / total).round(1) : 0
 
           amounts.push(amount)
           normalized_amounts.push(normalized)
@@ -213,18 +213,24 @@ class FeedReport
             other.push(dataset)
           end
         end
-        
+
+        amounts = []
+        normalized_amounts = []
+
+        @months.each_with_index do |ym, i|
+          amount = other.sum { |dataset| dataset[:amounts][i] }
+          total = sum_for(property.id, ym)
+          normalized = (total > 0) ? (amount * 100.0 / total).round(1) : 0
+
+          amounts.push(amount)
+          normalized_amounts.push(normalized)
+        end
+
         other_dataset = {
           title: "Other",
           is_other: true,
-          amounts: other.reduce([0] * @months.length) { |sum, dataset|
-            sum.each_with_index { |x, i| sum[i] += dataset[:amounts][i] }
-            sum
-          },
-          normalized: other.reduce([0] * @months.length) { |sum, dataset|
-            sum.each_with_index { |x, i| sum[i] += dataset[:normalized][i] }
-            sum
-          }
+          amounts: amounts,
+          normalized: normalized_amounts
         }
       
         data_lines.push(other_dataset)
