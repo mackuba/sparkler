@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class FeedReport
   YM_FORMAT = "DATE_FORMAT(date, '%Y-%m')"
 

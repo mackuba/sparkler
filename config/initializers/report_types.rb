@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 FeedReport.report_types = {
   'Total feed downloads' => {
     :field => 'osVersion',
