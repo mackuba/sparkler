@@ -5,8 +5,8 @@ describe FeedReport do
   
   let(:feed) { feeds(:feed1) }
   let(:options) {{ }}
-  let(:definitions) { nil }
-  let(:report) { FeedReport.new(feed, options.merge(report_definitions: definitions)) }
+  let(:report_types) { nil }
+  let(:report) { FeedReport.new(feed, options.merge(report_types: report_types)) }
   let(:saver) { StatisticSaver.new(feed) }
 
   it 'should generate reports' do
@@ -16,7 +16,7 @@ describe FeedReport do
 
   context 'if counts should be included' do
     let(:options) {{ include_counts: true }} 
-    let(:definitions) {{ 'Counts' => { field: 'a', only_counts: true }, 'Stats' => { field: 'b' } }}
+    let(:report_types) {{ 'Counts' => { field: 'a', only_counts: true }, 'Stats' => { field: 'b' } }}
 
     it 'should include reports that only list absolute counts' do
       report.reports.map { |r| r[:title] }.should == ['Counts', 'Stats']
@@ -40,7 +40,7 @@ describe FeedReport do
   end
 
   context 'if counts should not be included' do
-    let(:definitions) {{ 'Counts' => { field: 'a', only_counts: true }, 'Stats' => { field: 'b' } }}
+    let(:report_types) {{ 'Counts' => { field: 'a', only_counts: true }, 'Stats' => { field: 'b' } }}
 
     it 'should not include reports that only list absolute counts' do
       report.reports.map { |r| r[:title] }.should == ['Stats']
@@ -56,7 +56,7 @@ describe FeedReport do
   end
 
   context "if necessary properties don't exist yet" do
-    let(:definitions) {{ 'Foo' => { field: 'appSize' }}}
+    let(:report_types) {{ 'Foo' => { field: 'appSize' }}}
 
     it 'should create them' do
       Property.find_by_name('appSize').should be_nil
@@ -68,19 +68,19 @@ describe FeedReport do
   end
 
   it 'should copy title from definition' do
-    report = FeedReport.new(feed, report_definitions: { 'Foo' => { field: 'a' }})
+    report = FeedReport.new(feed, report_types: { 'Foo' => { field: 'a' }})
 
     report.reports.first[:title].should == 'Foo'
   end
 
   it 'should copy :is_downloads flag from definition' do
-    report = FeedReport.new(feed, report_definitions: { 'Foo' => { field: 'a', is_downloads: true }})
+    report = FeedReport.new(feed, report_types: { 'Foo' => { field: 'a', is_downloads: true }})
 
     report.reports.first[:is_downloads].should == true
   end
 
   it 'should copy :show_other => false flag from definition' do
-    report = FeedReport.new(feed, report_definitions: { 'Foo' => { field: 'a', show_other: false }})
+    report = FeedReport.new(feed, report_types: { 'Foo' => { field: 'a', show_other: false }})
 
     report.reports.first[:show_other].should == false
   end
@@ -92,13 +92,13 @@ describe FeedReport do
     saver.save_param(Date.new(2015, 6, 1), 'color', 'green')
     saver.save_param(Date.new(2015, 6, 3), 'version', '1.0')
 
-    report = FeedReport.new(feed, report_definitions: { 'Foo' => { field: 'color' }})
+    report = FeedReport.new(feed, report_types: { 'Foo' => { field: 'color' }})
 
     report.reports.first[:months].should == ['2015-01', '2015-03', '2015-06']
   end
 
   describe ':initial_range' do
-    let(:definitions) {{ 'Foo' => { field: 'color' }}}
+    let(:report_types) {{ 'Foo' => { field: 'color' }}}
 
     context "if there's only one month of data" do
       before do
@@ -135,7 +135,7 @@ describe FeedReport do
   describe ':series' do
     subject { report.reports.first[:series] }
 
-    let(:definitions) {{ 'Foo' => { field: 'value' }}}
+    let(:report_types) {{ 'Foo' => { field: 'value' }}}
     let(:options) {{ include_counts: true }} 
 
     it 'should calculate amounts and percentages for all months' do
@@ -166,7 +166,7 @@ describe FeedReport do
     end
 
     context 'if grouping is defined' do
-      let(:definitions) {{ 'Foo' => { field: 'value', group_by: proc { |x| x =~ /^iP/ ? 'mobile' : 'computer' }}}}
+      let(:report_types) {{ 'Foo' => { field: 'value', group_by: proc { |x| x =~ /^iP/ ? 'mobile' : 'computer' }}}}
 
       it 'should group labels using the defined function' do
         ['iPhone', 'iPad', 'MacBook', 'iPhone', 'iMac', 'MacBook', 'iPhone', 'iPhone', 'iMac'].each do |name|
@@ -202,7 +202,7 @@ describe FeedReport do
       end
 
       context 'if a custom sorter is defined' do
-        let(:definitions) {{ 'Foo' => { field: 'value', sort_by: lambda { |x| x.length }}}}
+        let(:report_types) {{ 'Foo' => { field: 'value', sort_by: lambda { |x| x.length }}}}
 
         it 'should sort the values using the defined function' do
           saver.save_param(Date.today, 'value', 'tiny')
@@ -215,7 +215,7 @@ describe FeedReport do
       end
 
       context 'if grouping is also defined' do
-        let(:definitions) {{ 'Foo' => {
+        let(:report_types) {{ 'Foo' => {
           field: 'value',
           sort_by: lambda { |x| x.reverse },
           group_by: lambda { |x| x[0..1].upcase }
@@ -233,7 +233,7 @@ describe FeedReport do
       end
 
       context 'if converting proc is also defined' do
-        let(:definitions) {{ 'Foo' => {
+        let(:report_types) {{ 'Foo' => {
           field: 'value',
           sort_by: lambda { |x| x[1..-1] },
           options: lambda { |x| x.reverse }
@@ -251,7 +251,7 @@ describe FeedReport do
 
     describe 'converting labels' do
       context 'if a proc is given' do
-        let(:definitions) {{ 'Foo' => { field: 'value', options: lambda { |x| x.upcase }}}}
+        let(:report_types) {{ 'Foo' => { field: 'value', options: lambda { |x| x.upcase }}}}
 
         it 'should pass the labels through the proc' do
           saver.save_param(Date.today, 'value', 'foo')
@@ -262,7 +262,7 @@ describe FeedReport do
       end
 
       context 'if a hash is given' do
-        let(:definitions) {{ 'Foo' => { field: 'value', options: { 'foo' => 'a', 'bar' => 'b' }}}}
+        let(:report_types) {{ 'Foo' => { field: 'value', options: { 'foo' => 'a', 'bar' => 'b' }}}}
 
         it 'should use the hash to map labels to proper titles' do
           saver.save_param(Date.today, 'value', 'foo')
@@ -281,7 +281,7 @@ describe FeedReport do
       end
 
       context 'if grouping is also defined' do
-        let(:definitions) {{ 'Foo' => {
+        let(:report_types) {{ 'Foo' => {
           field: 'value',
           options: lambda { |x| x.gsub(/Book(\w)/, 'Book \1') },
           group_by: lambda { |x| x[/^[a-z]+/i] }
@@ -298,7 +298,7 @@ describe FeedReport do
     end
 
     context 'if threshold is set' do
-      let(:definitions) {{ 'Foo' => {
+      let(:report_types) {{ 'Foo' => {
         field: 'color',
         threshold: 20.0
       }}}
