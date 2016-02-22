@@ -1,3 +1,4 @@
+ruby '2.2.4'
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2'
@@ -25,4 +26,11 @@ group :test do
   gem 'rspec-rails'
   gem 'webmock'
   gem 'safe_yaml', '>= 1.0.4'
+end
+
+group :production do
+  # Required for Heroku deployment. Logs to stdout, etc.
+  gem 'rails_12factor'
+  # Web server
+  gem 'puma'
 end
