@@ -1,4 +1,7 @@
+ruby '2.2.4'
 source 'https://rubygems.org'
+
+gem 'dotenv-rails', :groups => [:development, :test]
 
 gem 'rails', '~> 4.2'
 gem 'mysql2'
@@ -10,8 +13,6 @@ gem 'bcrypt'
 gem 'open_uri_redirections'
 
 group :development do
-  gem 'capistrano', '~> 2.15.1'
-
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
@@ -27,4 +28,11 @@ group :test do
   gem 'rspec-rails'
   gem 'webmock'
   gem 'safe_yaml', '>= 1.0.4'
+end
+
+group :production do
+  # Required for Heroku deployment. Logs to stdout, etc.
+  gem 'rails_12factor'
+  # Web server
+  gem 'puma'
 end
