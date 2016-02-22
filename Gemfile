@@ -10,8 +10,6 @@ gem 'bcrypt'
 gem 'open_uri_redirections'
 
 group :development do
-  gem 'capistrano', '~> 2.15.1'
-
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
