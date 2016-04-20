@@ -1,7 +1,8 @@
 class FeedsController < ApplicationController
+  RELOAD_KEY = ENV['X_RELOAD_KEY']
   before_action :set_feed, only: [:reload, :edit, :update]
   before_action :set_active_feed, only: [:show]
-  before_action :require_admin, except: [:show]
+  before_action :require_admin, except: [:show, :reload]
 
   def index
     @feeds = Feed.order('inactive, title')
@@ -20,12 +21,16 @@ class FeedsController < ApplicationController
   end
 
   def reload
-    @feed.load_contents
+    if logged_in? || request.headers['X_RELOAD_KEY'] == RELOAD_KEY
+      @feed.load_contents
 
-    if request.xhr?
-      render partial: 'feed', locals: { feed: @feed }
+      if request.xhr?
+        render partial: 'feed', locals: { feed: @feed }
+      else
+        redirect_to feeds_path
+      end
     else
-      redirect_to feeds_path
+      redirect_to login_form_user_path, alert: 'You need to log in to access this page.'
     end
   end
 
