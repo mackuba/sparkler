@@ -84,6 +84,21 @@ describe Feed do
       end
     end
 
+    context 'if feed includes release candidates' do
+      let(:xml) { %(
+        <channel>
+        <item><enclosure sparkle:version="1.0.0.rc.1" url="bebebe"/></item>
+        <item><enclosure sparkle:version="1.0.0" url="bebebe"/></item>
+        </channel>
+      )}
+
+      it 'should prefer final builds' do
+        stub_request(:get, feed.url).to_return(body: xml)
+        feed.load_contents
+        feed.last_version.should == '1.0.0'
+      end
+    end
+
     context "if feed can't be loaded" do
       it 'should not raise an exception' do
         stub_request(:get, feed.url).to_raise(SocketError)

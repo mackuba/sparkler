@@ -36,7 +36,7 @@ class Feed < ActiveRecord::Base
     text = open(url, :allow_redirections => :safe).read
 
     self.contents = text
-    self.last_version = version_from_contents(text)
+    self.last_version = latest_version_from_contents(text)
     self.load_error = nil
     save!
   rescue OpenURI::HTTPError, RuntimeError, SocketError, SystemCallError => error
@@ -54,10 +54,14 @@ class Feed < ActiveRecord::Base
     end
   end
 
-  def version_from_contents(contents)
+  def latest_version_from_contents(contents)
     xml = Nokogiri::XML(contents)
-    first_item = xml.css('item').first
-    enclosure = first_item && first_item.css('enclosure').first
-    enclosure && (enclosure['sparkle:shortVersionString'] || enclosure['sparkle:version'])
+    versions = xml.css('item enclosure').map { |a| version_from_enclosure(a) }
+    versions.sort.reverse.first.to_s
+  end
+
+  def version_from_enclosure(enclosure)
+    version_string = enclosure && (enclosure['sparkle:shortVersionString'] || enclosure['sparkle:version'])
+    Gem::Version.new(version_string)
   end
 end
