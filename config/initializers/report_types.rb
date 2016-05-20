@@ -36,8 +36,11 @@ FeedReport.report_types = {
       'iMac13,2' => 'iMac 27" (2012)',
       'iMac14,1' => 'iMac 21" (2013)',
       'iMac14,2' => 'iMac 27" (2013)',
+      'iMac14,3' => 'iMac 21" (2013)',
       'iMac14,4' => 'iMac 21" (2014)',
       'iMac15,1' => 'Retina iMac 27" (2014)',
+
+      'MacBook8,1' => 'MacBook 12" (2015)',
 
       'MacBookAir6,1' => 'MBA 11" (2013-14)',
       'MacBookAir6,2' => 'MBA 13" (2013-14)',
@@ -57,6 +60,8 @@ FeedReport.report_types = {
       'MacBookPro11,1' => 'Retina MBP 13" (2013-14)',
       'MacBookPro11,2' => 'Retina MBP 15" (2013-14)',
       'MacBookPro11,3' => 'Retina MBP 15" (2013-14)',
+      'MacBookPro11,4' => 'Retina MBP 15" (2015)',
+      'MacBookPro11,5' => 'Retina MBP 15" (2015)',
       'MacBookPro12,1' => 'Retina MBP 13" (2015)',
     }
   },
