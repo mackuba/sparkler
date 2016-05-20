@@ -61,57 +61,62 @@ class FeedReport
     @report_types.each do |report_title, options|
       next if options[:only_counts] && !@include_counts
 
-      property = @properties.detect { |p| p.name == options[:field] } || Property.create!(name: options[:field])
-
-      converting_proc = case options[:options]
-        when Proc then options[:options]
-        when Hash then lambda { |title| options[:options][title] || title }
-        else lambda { |title| title }
-      end
-
-      grouping_proc = options[:group_by] || lambda { |title| title }
-      sorting_proc = options[:sort_by] || lambda { |title| [title.to_i, title.downcase] }
-
-      option_map = processed_options(property.options, grouping_proc, converting_proc, sorting_proc)
-
-      data_lines = option_map.map do |title, options|
-        amounts, normalized = calculate_dataset(property) do |ym, i|
-          options.sum { |o| count_for(property.id, o.id, ym) }
-        end
-
-        { title: title, amounts: amounts, normalized: normalized }
-      end
-
-      data_lines.delete_if { |d| d[:amounts].sum == 0 }
-
-      if options[:threshold]
-        data_lines = extract_other_dataset(data_lines, property, options[:threshold])
-      end
-
-      if options[:only_counts]
-        data_lines.each { |dataset| dataset.delete(:normalized) }
-      else
-        if !@include_counts
-          data_lines.each { |dataset| dataset.delete(:amounts) }
-        end
-      end
-
-      report = {
-        title: report_title,
-        months: @months,
-        series: data_lines,
-        initial_range: case @months.length
-          when 1 then 'month'
-          when 2..12 then 'year'
-          else 'all'
-        end
-      }
-
-      report[:is_downloads] = options[:is_downloads] if options.has_key?(:is_downloads)
-      report[:show_other] = options[:show_other] if options.has_key?(:show_other)
-
+      report = generate_report(report_title, options)
       @reports.push(report)
     end
+  end
+
+  def generate_report(report_title, options)
+    property = @properties.detect { |p| p.name == options[:field] } || Property.create!(name: options[:field])
+
+    converting_proc = case options[:options]
+      when Proc then options[:options]
+      when Hash then lambda { |title| options[:options][title] || title }
+      else lambda { |title| title }
+    end
+
+    grouping_proc = options[:group_by] || lambda { |title| title }
+    sorting_proc = options[:sort_by] || lambda { |title| [title.to_i, title.downcase] }
+
+    option_map = processed_options(property.options, grouping_proc, converting_proc, sorting_proc)
+
+    data_lines = option_map.map do |title, options|
+      amounts, normalized = calculate_dataset(property) do |ym, i|
+        options.sum { |o| count_for(property.id, o.id, ym) }
+      end
+
+      { title: title, amounts: amounts, normalized: normalized }
+    end
+
+    data_lines.delete_if { |d| d[:amounts].sum == 0 }
+
+    if options[:threshold]
+      data_lines = extract_other_dataset(data_lines, property, options[:threshold])
+    end
+
+    if options[:only_counts]
+      data_lines.each { |dataset| dataset.delete(:normalized) }
+    else
+      if !@include_counts
+        data_lines.each { |dataset| dataset.delete(:amounts) }
+      end
+    end
+
+    report = {
+      title: report_title,
+      months: @months,
+      series: data_lines,
+      initial_range: case @months.length
+        when 1 then 'month'
+        when 2..12 then 'year'
+        else 'all'
+      end
+    }
+
+    report[:is_downloads] = options[:is_downloads] if options.has_key?(:is_downloads)
+    report[:show_other] = options[:show_other] if options.has_key?(:show_other)
+
+    report
   end
 
   def processed_options(options, grouping_proc, converting_proc, sorting_proc)
