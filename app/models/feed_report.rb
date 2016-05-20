@@ -10,7 +10,7 @@ class FeedReport
 
     @feed = feed
     @months = feed.statistics.select("DISTINCT #{YM_FORMAT} AS ym").order('ym').map(&:ym)
-    @properties = Property.all.includes(:options)
+    @properties = Property.all.includes(:options).to_a
 
     calculate_counts
     calculate_sums
@@ -67,7 +67,12 @@ class FeedReport
   end
 
   def generate_report(report_title, options)
-    property = @properties.detect { |p| p.name == options[:field] } || Property.create!(name: options[:field])
+    property = @properties.detect { |p| p.name == options[:field] }
+
+    if property.nil?
+      property = Property.create!(name: options[:field])
+      @properties.push(property)
+    end
 
     converting_proc = case options[:options]
       when Proc then options[:options]

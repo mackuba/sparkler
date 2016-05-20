@@ -1,7 +1,7 @@
 class StatisticSaver
   def initialize(feed)
     @feed = feed
-    @properties = Property.all.includes(:options)
+    @properties = Property.all.includes(:options).to_a
   end
 
   def save_params(params, user_agent)
