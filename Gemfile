@@ -23,8 +23,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec'
-  gem 'rspec-rails'
-  gem 'webmock'
-  gem 'safe_yaml', '>= 1.0.4'
+  gem 'rspec', '~> 3.2'
+  gem 'rspec-rails', '~> 3.2'
+  gem 'webmock', '~> 1.18'
 end
