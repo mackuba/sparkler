@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150419110659) do
+ActiveRecord::Schema.define(version: 20160520173336) do
 
   create_table "feeds", force: :cascade do |t|
     t.string  "title",         limit: 255,                   null: false
@@ -30,9 +30,13 @@ ActiveRecord::Schema.define(version: 20150419110659) do
     t.string  "name",        limit: 255, null: false
   end
 
+  add_index "options", ["property_id", "name"], name: "index_options_on_property_id_and_name", unique: true, using: :btree
+
   create_table "properties", force: :cascade do |t|
     t.string "name", limit: 255, null: false
   end
+
+  add_index "properties", ["name"], name: "index_properties_on_name", unique: true, using: :btree
 
   create_table "statistics", force: :cascade do |t|
     t.integer "feed_id",     limit: 4,             null: false
