@@ -1,7 +1,10 @@
 .bundle
 .DS_Store
+Capfile
+Gemfile.deploy*
 config/database.yml
 config/deploy.rb
-config/deploy/production.rb
+config/deploy
+deploy/bin
 log
 tmp

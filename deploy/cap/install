@@ -1,0 +1,12 @@
+#!/bin/bash
+
+CAP_DIR=$(dirname "$0")
+BASE_DIR="$CAP_DIR/../.."
+
+cp "$CAP_DIR/Capfile" "$BASE_DIR"
+cp "$CAP_DIR/Gemfile.deploy" "$BASE_DIR"
+cp "$CAP_DIR/Gemfile.deploy.lock" "$BASE_DIR"
+
+mkdir -p "$BASE_DIR/config/deploy"
+cp "$CAP_DIR/deploy.rb" "$BASE_DIR/config"
+cp "$CAP_DIR/production.rb" "$BASE_DIR/config/deploy"
