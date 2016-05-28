@@ -14,7 +14,10 @@ One of the features of Sparkle is that during the update check it can also [send
 
 However, in order to collect these statistics and do something useful with them, you need to have a place to store and present them. Sparkler is meant to be that place: it's a web app that Mac app authors can set up on their servers to collect this kind of statistics from their own users.
 
-To get an idea of how the statistics can look, check out the Sparkler page for my own apps: [Gitifier](http://sparkle.psionides.eu/feeds/gitifier/statistics) (now maintained by [Nikolaj Schumacher](https://github.com/nschum/Gitifier)) and [Hive Mac](http://sparkle.psionides.eu/feeds/hive-mac/statistics).
+To get an idea of how the statistics can look, check out the Sparkler pages for these apps:
+
+- [CocoaPods app](http://usage.cocoapods.org/feeds/cocoapods_app/statistics)
+- [Gitifier](http://sparkle.psionides.eu/feeds/gitifier/statistics)
 
 Here's a small preview:
 
