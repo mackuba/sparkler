@@ -128,13 +128,13 @@ bundle --gemfile Gemfile.deploy --binstubs deploy/bin
 
 Then look at the `config/deploy.rb` and `config/deploy/production.rb` files. In the simplest case you'll only need to update the user and hostname in `config/deploy/production.rb`. The configs are prepared for a server that uses Passenger and doesn't use any Ruby version manager like RVM. If you use a Ruby version manager on the server or you use a different Ruby web server, you'll need to tweak the gems in `Gemfile.deploy` and the include lines in `Capfile`.
 
-Before the first deploy you need to call the setup task to create the directory structure on the server:
+When you're ready, call this command to deploy:
 
 ```
-deploy/bin/cap deploy:setup
+deploy/bin/cap deploy
 ```
 
-This will create the following directories in the specified location:
+The first deploy should fail with a message "linked file ... does not exist", because you're missing some config files. It will only create the necessary directory structure for you in the specified location on the server:
 
 - `releases` - this will contain subdirectories with several previous versions of the app
 - `shared` - this will contain some shared data like installed gems, custom configs etc.
@@ -147,7 +147,7 @@ After you run this, log in to your server, go to `/your-app-location/shared/conf
 
 You also need to actually create the specified database and set up the user/password in your MySQL.
 
-Once this is done, you can deploy the latest version from your computer with this command:
+Once this is done, you can complete the deploy using the same command again:
 
 ```
 deploy/bin/cap deploy
