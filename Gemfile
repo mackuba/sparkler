@@ -10,12 +10,6 @@ gem 'bcrypt'
 gem 'open_uri_redirections'
 
 group :development do
-  gem 'capistrano', '~> 3.5', require: false
-  gem 'capistrano-default_stage', '~> 0.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
-  gem 'capistrano-rails', '~> 1.1', require: false
-  gem 'capistrano-passenger', '~> 0.2', require: false
-
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
