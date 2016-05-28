@@ -32,7 +32,7 @@ When you have that working, you need to release an update to your app that point
 
 To install Sparkler on your server, you need a few other things there first:
 
-- Ruby 1.9.3 or newer (2.0+ is recommended)
+- Ruby 2.0 or newer
 - an HTTP server (Nginx/Apache)
 - a Ruby/Rails app server
 - a MySQL database
@@ -245,6 +245,6 @@ location /feed/foobar {
 
 ## Credits & contributing
 
-Copyright © 2015 [Kuba Suder](https://github.com/mackuba). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
+Copyright © 2016 [Kuba Suder](https://github.com/mackuba). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
 
 If you have any ideas for new features, improvements and bug fixes, pull requests are very welcome. (Just make sure you follow the existing code formatting style since I have a bit of an OCD...)
