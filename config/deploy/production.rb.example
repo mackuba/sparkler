@@ -7,6 +7,8 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
+# enter name or IP of your server here
+server 'example.com', user: 'deploy', roles: %w{app db web}
 
 
 # role-based syntax

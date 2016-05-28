@@ -54,7 +54,11 @@ GEM
     capistrano-bundler (1.1.4)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-default_stage (0.1.0)
+      capistrano (~> 3.0)
     capistrano-harrow (0.5.1)
+    capistrano-passenger (0.2.0)
+      capistrano (~> 3.0)
     capistrano-rails (1.1.6)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
@@ -179,6 +183,8 @@ DEPENDENCIES
   byebug
   capistrano (~> 3.5)
   capistrano-bundler (~> 1.1)
+  capistrano-default_stage
+  capistrano-passenger (~> 0.2)
   capistrano-rails (~> 1.1)
   mysql2
   nokogiri
