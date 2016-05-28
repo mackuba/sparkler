@@ -111,18 +111,24 @@ Install the required Ruby gems:
 bundle install
 ```
 
-Capistrano uses a config file named `deploy.rb` to tell it where and how to deploy the app. Since everyone will deploy it to a different place, you need to create your own copy of the file based on the [example version](https://github.com/mackuba/sparkler/blob/master/config/deploy.rb.example):
+Capistrano uses a few config files to tell it where and how to deploy the app. Since everyone will deploy it a bit differently, this repository only includes templates of those files that you need to copy and update to suit your needs. You can find them in `deploy/cap`, and you can make copies this way:
 
 ```
-cp config/deploy.rb.example config/deploy.rb
+deploy/cap/install
 ```
 
-The only things you'll definitely want to change there are the server name (`server`) and possibly app directory path (`deploy_to`). Everything else should work fine as it is in most cases. 
+Next, install the Capistrano gems:
+
+```
+bundle --gemfile Gemfile.deploy --binstubs deploy/bin
+```
+
+Then look at the `config/deploy.rb` and `config/deploy/production.rb` files. In the simplest case you'll only need to update the user and hostname in `config/deploy/production.rb`. The configs are prepared for a server that uses Passenger and doesn't use any Ruby version manager like RVM. If you use a Ruby version manager on the server or you use a different Ruby web server, you'll need to tweak the gems in `Gemfile.deploy` and the include lines in `Capfile`.
 
 Before the first deploy you need to call the setup task to create the directory structure on the server:
 
 ```
-bundle exec cap deploy:setup
+deploy/bin/cap deploy:setup
 ```
 
 This will create the following directories in the specified location:
@@ -141,7 +147,7 @@ You also need to actually create the specified database and set up the user/pass
 Once this is done, you can deploy the latest version from your computer with this command:
 
 ```
-bundle exec cap deploy:migrations
+deploy/bin/cap deploy
 ```
 
 Repeat this any time you want to update Sparkler to a new version. This will deploy the latest version to a new subdirectory in `releases` and will change the `current` link to point to it.
