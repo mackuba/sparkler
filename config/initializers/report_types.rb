@@ -8,7 +8,7 @@ FeedReport.report_types = {
     :is_downloads => true
   },
 
-  'OS X Version' => {
+  'macOS Version' => {
     :field => 'osVersion',
     :group_by => lambda { |v| v.split('.').first(2).join('.') },
     :sort_by => lambda { |v| v.split('.').map(&:to_i) }

@@ -1,6 +1,6 @@
 # Sparkler
 
-Sparkler is a web application written in Ruby on Rails that collects system profile statistics from Mac OS X apps using [Sparkle updater library](https://sparkle-project.org).
+Sparkler is a web application written in Ruby on Rails that collects system profile statistics from macOS apps using [Sparkle updater library](https://sparkle-project.org).
 
 <a href="https://www.flickr.com/photos/lilcrabbygal/418166137" title="sparkler against night by Vanessa Pike-Russell, on Flickr"><img src="https://farm1.staticflickr.com/132/418166137_9c4d64dec4.jpg" width="360" alt="sparkler against night"></a>
 
@@ -8,9 +8,9 @@ Sparkler is a web application written in Ruby on Rails that collects system prof
 
 ## What it does
 
-Sparkle is a very popular library used by a significant percentage of (non-app-store) Mac OS X apps, created by [Andy Matuschak](https://andymatuschak.org) and now maintained by [porneL](https://github.com/pornel). Apps use it to check if a newer version is available and present the familiar "A new version of X is available!" dialog to the users.
+Sparkle is a very popular library used by a significant percentage of (non-app-store) macOS apps, created by [Andy Matuschak](https://andymatuschak.org) and now maintained by [porneL](https://github.com/pornel). Apps use it to check if a newer version is available and present the familiar "A new version of X is available!" dialog to the users.
 
-One of the features of Sparkle is that during the update check it can also [send anonymous system info](https://sparkle-project.org/documentation/system-profiling/) back to the author in the form of URL parameters like "?osVersion=10.10.0". The author can collect this data and then use the gathered statistics to determine e.g. if it's worth supporting Macs with older processors or older versions of OS X.
+One of the features of Sparkle is that during the update check it can also [send anonymous system info](https://sparkle-project.org/documentation/system-profiling/) back to the author in the form of URL parameters like "?osVersion=10.13.0". The author can collect this data and then use the gathered statistics to determine e.g. if it's worth supporting Macs with older processors or older versions of macOS.
 
 However, in order to collect these statistics and do something useful with them, you need to have a place to store and present them. Sparkler is meant to be that place: it's a web app that Mac app authors can set up on their servers to collect this kind of statistics from their own users.
 
