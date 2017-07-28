@@ -1,6 +1,6 @@
 # Sparkler
 
-Sparkler is a web application written in Ruby on Rails that collects system profile statistics from Mac OS X apps using [Sparkle updater library](http://sparkle-project.org).
+Sparkler is a web application written in Ruby on Rails that collects system profile statistics from Mac OS X apps using [Sparkle updater library](https://sparkle-project.org).
 
 <a href="https://www.flickr.com/photos/lilcrabbygal/418166137" title="sparkler against night by Vanessa Pike-Russell, on Flickr"><img src="https://farm1.staticflickr.com/132/418166137_9c4d64dec4.jpg" width="360" alt="sparkler against night"></a>
 
@@ -8,9 +8,9 @@ Sparkler is a web application written in Ruby on Rails that collects system prof
 
 ## What it does
 
-Sparkle is a very popular library used by a significant percentage of (non-app-store) Mac OS X apps, created by [Andy Matuschak](http://andymatuschak.org) and now maintained by [porneL](https://github.com/pornel). Apps use it to check if a newer version is available and present the familiar "A new version of X is available!" dialog to the users.
+Sparkle is a very popular library used by a significant percentage of (non-app-store) Mac OS X apps, created by [Andy Matuschak](https://andymatuschak.org) and now maintained by [porneL](https://github.com/pornel). Apps use it to check if a newer version is available and present the familiar "A new version of X is available!" dialog to the users.
 
-One of the features of Sparkle is that during the update check it can also [send anonymous system info](https://github.com/sparkle-project/Sparkle/wiki/System-Profiling) back to the author in the form of URL parameters like "?osVersion=10.10.0". The author can collect this data and then use the gathered statistics to determine e.g. if it's worth supporting Macs with older processors or older versions of OS X.
+One of the features of Sparkle is that during the update check it can also [send anonymous system info](https://sparkle-project.org/documentation/system-profiling/) back to the author in the form of URL parameters like "?osVersion=10.10.0". The author can collect this data and then use the gathered statistics to determine e.g. if it's worth supporting Macs with older processors or older versions of OS X.
 
 However, in order to collect these statistics and do something useful with them, you need to have a place to store and present them. Sparkler is meant to be that place: it's a web app that Mac app authors can set up on their servers to collect this kind of statistics from their own users.
 
@@ -67,13 +67,13 @@ gem install bundler
 
 ### HTTP server
 
-If you have a VPS or another kind of server, you almost certainly have this already, but in case you don't: I recommend Nginx which is more lightweight and easier to set up than Apache. You can install Nginx together with Passenger, the Ruby app server (see below) from the [Phusion repository](https://www.phusionpassenger.com/documentation/Users%20guide%20Nginx.html#install_on_debian_ubuntu).
+If you have a VPS or another kind of server, you almost certainly have this already, but in case you don't: I recommend Nginx which is more lightweight and easier to set up than Apache. You can install Nginx together with Passenger, the Ruby app server (see below) from the [Phusion repository](https://www.phusionpassenger.com/library/install/apt_repo/).
 
 Remember to also open the HTTP(S) ports on your firewall.
 
 ### Ruby app server
 
-There are several different competing Ruby app servers, but most of them require running additional server processes in the background that need to be separately monitored, restarted if they go down etc. The one that's easiest to set up and use (IMHO) is [Passenger by Phusion](https://www.phusionpassenger.com), which integrates with Apache or Nginx and uses the web server to launch itself automatically. Follow the [instructions on their website](https://www.phusionpassenger.com/documentation/Users%20guide%20Nginx.html#installation) to set it up.
+There are several different competing Ruby app servers, but most of them require running additional server processes in the background that need to be separately monitored, restarted if they go down etc. The one that's easiest to set up and use (IMHO) is [Passenger by Phusion](https://www.phusionpassenger.com), which integrates with Apache or Nginx and uses the web server to launch itself automatically. Follow the [instructions on their website](https://www.phusionpassenger.com/library/install/nginx/) to set it up.
 
 Once you have Nginx and Passenger installed, you'll need to add a server block to your Nginx config that looks something like this:
 
@@ -248,6 +248,6 @@ location /feed/foobar {
 
 ## Credits & contributing
 
-Copyright © 2016 [Kuba Suder](https://github.com/mackuba). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
+Copyright © 2016 [Kuba Suder](https://mackuba.eu). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
 
 If you have any ideas for new features, improvements and bug fixes, pull requests are very welcome. (Just make sure you follow the existing code formatting style since I have a bit of an OCD...)
