@@ -93,15 +93,15 @@ Other Ruby servers you might consider instead include e.g. Unicorn or Puma.
 
 ## Deploying the app
 
-### Deploying with Capistrano
-
-Capistrano is a tool commonly used for deploying Rails apps. This is the recommended approach - the advantages are that:
+The recommended approach is to use Capistrano, which is a tool commonly used for deploying Rails apps. The advantages are that:
 
 - you can play with the app on your own computer first to test it there
 - you get automatic app versioning on the server, so you can roll back to a previous version easily
 - the installation is more automated
 
-To do that, clone the repository to your machine first:
+### Running the app locally
+
+If you want to try the app locally first, clone the repository to your machine:
 
 ```
 git clone https://github.com/mackuba/sparkler.git
@@ -113,6 +113,34 @@ Install the required Ruby gems:
 ```
 bundle install
 ```
+
+Create a database config file based on the template file:
+
+```
+cp config/database.yml.example config/database.yml
+```
+
+The default config uses `sparkler_development` database in development mode and a `root` user with no password. Edit the file if needed.
+
+Create an empty database:
+
+```
+bin/rake db:create
+```
+
+Run the "migrations" that create a correct database schema:
+
+```
+bin/rake db:migrate
+```
+
+And then start the server at `localhost:3000`:
+
+```
+bin/rails server
+```
+
+### Deploying with Capistrano
 
 Capistrano uses a few config files to tell it where and how to deploy the app. Since everyone will deploy it a bit differently, this repository only includes templates of those files that you need to copy and update to suit your needs. You can find them in `deploy/cap`, and you can make copies this way:
 
@@ -145,7 +173,7 @@ After you run this, log in to your server, go to `/your-app-location/shared/conf
 - `database.yml` based on the [config/database.yml.example](https://github.com/mackuba/sparkler/blob/master/config/database.yml.example) file from the Sparkler repo - fill it in with your chosen database name (under `production`), database user and password
 - `secret_key_base.key` which needs to contain a long random string for encrypting cookie sessions - you can generate it by running `bin/rake secret` in the Sparkler directory on your machine
 
-You also need to actually create the specified database and set up the user/password in your MySQL.
+You also need to actually set up the user/password in your MySQL and create the specified database (you can use `bin/rake db:create`).
 
 Once this is done, you can complete the deploy using the same command again:
 
