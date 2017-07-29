@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.1'
 gem 'mysql2'
 
 gem 'sass-rails', '~> 5.0'
@@ -21,7 +21,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec', '~> 3.2'
-  gem 'rspec-rails', '~> 3.2'
+  gem 'rspec', '~> 3.6'
+  gem 'rspec-rails', '~> 3.6'
   gem 'webmock', '~> 1.18'
 end
