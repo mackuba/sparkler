@@ -18,6 +18,9 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background
   gem 'spring'
+
+  # Watches filesystem for changes and automatically reloads only edited files
+  gem 'listen'
 end
 
 group :test do
