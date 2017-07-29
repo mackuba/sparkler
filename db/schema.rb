@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -13,43 +12,40 @@
 
 ActiveRecord::Schema.define(version: 20160520173336) do
 
-  create_table "feeds", force: :cascade do |t|
-    t.string  "title",         limit: 255,                   null: false
-    t.string  "name",          limit: 255,                   null: false
-    t.string  "url",           limit: 255,                   null: false
-    t.boolean "public_stats",  limit: 1,     default: false, null: false
-    t.boolean "public_counts", limit: 1,     default: false, null: false
-    t.text    "contents",      limit: 65535
-    t.string  "last_version",  limit: 255
-    t.string  "load_error",    limit: 255
-    t.boolean "inactive",      limit: 1,     default: false, null: false
+  create_table "feeds", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "title", null: false
+    t.string "name", null: false
+    t.string "url", null: false
+    t.boolean "public_stats", default: false, null: false
+    t.boolean "public_counts", default: false, null: false
+    t.text "contents"
+    t.string "last_version"
+    t.string "load_error"
+    t.boolean "inactive", default: false, null: false
   end
 
-  create_table "options", force: :cascade do |t|
-    t.integer "property_id", limit: 4,   null: false
-    t.string  "name",        limit: 255, null: false
+  create_table "options", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "property_id", null: false
+    t.string "name", null: false
+    t.index ["property_id", "name"], name: "index_options_on_property_id_and_name", unique: true
   end
 
-  add_index "options", ["property_id", "name"], name: "index_options_on_property_id_and_name", unique: true, using: :btree
-
-  create_table "properties", force: :cascade do |t|
-    t.string "name", limit: 255, null: false
+  create_table "properties", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name", null: false
+    t.index ["name"], name: "index_properties_on_name", unique: true
   end
 
-  add_index "properties", ["name"], name: "index_properties_on_name", unique: true, using: :btree
-
-  create_table "statistics", force: :cascade do |t|
-    t.integer "feed_id",     limit: 4,             null: false
-    t.date    "date",                              null: false
-    t.integer "property_id", limit: 4,             null: false
-    t.integer "option_id",   limit: 4,             null: false
-    t.integer "counter",     limit: 4, default: 0, null: false
+  create_table "statistics", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "feed_id", null: false
+    t.date "date", null: false
+    t.integer "property_id", null: false
+    t.integer "option_id", null: false
+    t.integer "counter", default: 0, null: false
+    t.index ["feed_id", "date", "property_id", "option_id"], name: "stats_index", unique: true
   end
 
-  add_index "statistics", ["feed_id", "date", "property_id", "option_id"], name: "stats_index", unique: true, using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string "password_digest", limit: 255
+  create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "password_digest"
   end
 
 end

@@ -1,4 +1,4 @@
-class InitialTables < ActiveRecord::Migration
+class InitialTables < ActiveRecord::Migration[4.2]
   def change
     create_table :feeds do |t|
       t.string :title, :name, :url, null: false

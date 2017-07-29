@@ -1,4 +1,4 @@
-class SeparateStatisticsPerDay < ActiveRecord::Migration
+class SeparateStatisticsPerDay < ActiveRecord::Migration[4.2]
   def up
     add_column :statistics, :date, :date, null: false, after: 'feed_id'
 
