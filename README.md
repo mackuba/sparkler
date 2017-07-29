@@ -21,7 +21,7 @@ To get an idea of how the statistics can look, check out the Sparkler pages for 
 
 Here's a small preview:
 
-![](http://i.imgur.com/7BkXWZf.png)
+![](http://i.imgur.com/MXnyhnD.png)
 
 ## How it works
 
