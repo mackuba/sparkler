@@ -1,6 +1,6 @@
 require 'open-uri'
 
-class Feed < ActiveRecord::Base
+class Feed < ApplicationRecord
   has_many :statistics
   validates_presence_of :title, :name, :url
 
