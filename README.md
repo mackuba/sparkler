@@ -35,7 +35,7 @@ When you have that working, you need to release an update to your app that point
 
 To install Sparkler on your server, you need a few other things there first:
 
-- Ruby 2.0 or newer
+- Ruby 2.2.2 or newer
 - an HTTP server (Nginx/Apache)
 - a Ruby/Rails app server
 - a MySQL database
@@ -44,7 +44,7 @@ If you already have these set up or you know how to install them, you can skip t
 
 ### Ruby
 
-Any recent Linux distribution will usually include some version of Ruby by default. However, it's possible that it's an older version of Ruby - specifically, the 1.8.x versions are not supported by Rails anymore.
+Any recent Linux distribution will usually include some version of Ruby by default. However, it's possible that it's an older version of Ruby like 1.8 or 1.9. Rails 5 requires Ruby 2.2.2 or newer.
 
 Check which version you have:
 
@@ -276,6 +276,6 @@ location /feed/foobar {
 
 ## Credits & contributing
 
-Copyright © 2016 [Kuba Suder](https://mackuba.eu). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
+Copyright © 2017 [Kuba Suder](https://mackuba.eu). Licensed under [Very Simple Public License](https://github.com/mackuba/sparkler/blob/master/VSPL-LICENSE.txt) (a simplified version of the MIT license that fits in 3 lines).
 
 If you have any ideas for new features, improvements and bug fixes, pull requests are very welcome. (Just make sure you follow the existing code formatting style since I have a bit of an OCD...)
