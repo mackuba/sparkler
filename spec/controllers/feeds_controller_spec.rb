@@ -162,7 +162,7 @@ describe FeedsController do
 
     context 'if request was made with XHR' do
       it 'should return a rendered feed partial instead' do
-        xhr :post, :reload, id: feed.name
+        post :reload, params: { id: feed.name}, xhr: true
 
         response.should be_success
         response.should render_template('_feed')
