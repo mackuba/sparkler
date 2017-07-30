@@ -25,7 +25,7 @@ FeedReport.report_types = {
     }
   },
 
-  'Mac Model' => {
+  'Popular Mac Models' => {
     :field => 'model',
     :threshold => 7.5,
     :show_other => false,
