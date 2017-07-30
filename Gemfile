@@ -24,6 +24,7 @@ group :development do
 end
 
 group :test do
+  gem 'rails-controller-testing'
   gem 'rspec', '~> 3.6'
   gem 'rspec-rails', '~> 3.6'
   gem 'webmock', '~> 1.18'
