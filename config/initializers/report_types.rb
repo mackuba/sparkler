@@ -38,9 +38,17 @@ FeedReport.report_types = {
       'iMac14,2' => 'iMac 27" (2013)',
       'iMac14,3' => 'iMac 21" (2013)',
       'iMac14,4' => 'iMac 21" (2014)',
-      'iMac15,1' => 'Retina iMac 27" (2014)',
+      'iMac15,1' => 'Retina iMac 27" (2014-15)',
+      'iMac16,1' => 'iMac 21" (2015)',
+      'iMac16,2' => 'Retina iMac 21" (2015)',
+      'iMac17,1' => 'Retina iMac 27" (2015)',
+      'iMac18,1' => 'iMac 21" (2017)',
+      'iMac18,2' => 'Retina iMac 21" (2017)',
+      'iMac18,3' => 'Retina iMac 27" (2017)',
 
       'MacBook8,1' => 'MacBook 12" (2015)',
+      'MacBook9,1' => 'MacBook 12" (2016)',
+      'MacBook10,1' => 'MacBook 12" (2017)',
 
       'MacBookAir6,1' => 'MBA 11" (2013-14)',
       'MacBookAir6,2' => 'MBA 13" (2013-14)',
@@ -63,6 +71,12 @@ FeedReport.report_types = {
       'MacBookPro11,4' => 'Retina MBP 15" (2015)',
       'MacBookPro11,5' => 'Retina MBP 15" (2015)',
       'MacBookPro12,1' => 'Retina MBP 13" (2015)',
+      'MacBookPro13,1' => 'Retina MBP 13" (2016)',
+      'MacBookPro13,2' => 'TouchBar MBP 13" (2016)',
+      'MacBookPro13,3' => 'TouchBar MBP 15" (2016)',
+      'MacBookPro14,1' => 'Retina MBP 13" (2017)',
+      'MacBookPro14,2' => 'TouchBar MBP 13" (2017)',
+      'MacBookPro14,3' => 'TouchBar MBP 15" (2017)',
     }
   },
 
