@@ -10,7 +10,7 @@ describe StatisticsController do
       let(:feed) { feeds(:inactive) }
 
       it 'should return ActiveRecord::RecordNotFound' do
-        expect { get :index, feed_id: feed.name }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { get :index, params: { feed_id: feed.name }}.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -19,13 +19,13 @@ describe StatisticsController do
 
       context 'if user is logged in' do
         it 'should render the page' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           response.should be_success
         end
 
         it 'should include counts' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           assigns(:include_counts).should == true
         end
@@ -35,7 +35,7 @@ describe StatisticsController do
         before { session.delete(:logged_in) }
 
         it 'should redirect to login page' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           response.should redirect_to('/user/login_form')
         end
@@ -49,13 +49,13 @@ describe StatisticsController do
         before { session.delete(:logged_in) }
 
         it 'should render the page' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           response.should be_success
         end
 
         it 'should include counts' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           assigns(:include_counts).should == true
         end
@@ -67,13 +67,13 @@ describe StatisticsController do
 
       context 'if user is logged in' do
         it 'should render the page' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           response.should be_success
         end
 
         it 'should include counts' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           assigns(:include_counts).should == true
         end
@@ -83,13 +83,13 @@ describe StatisticsController do
         before { session.delete(:logged_in) }
 
         it 'should render the page' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           response.should be_success
         end
 
         it 'should NOT include counts' do
-          get :index, feed_id: feed.name
+          get :index, params: { feed_id: feed.name }
 
           assigns(:include_counts).should be_falsy
         end

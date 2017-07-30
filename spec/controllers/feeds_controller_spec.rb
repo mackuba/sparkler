@@ -30,14 +30,14 @@ describe FeedsController do
       before { feed.update_attributes(contents: 'txt') }
 
       it 'should return feed body' do
-        get :show, id: feed.name
+        get :show, params: { id: feed.name }
 
         response.should be_success
         response.body.should == 'txt'
       end
 
       it 'should not reload the feed' do
-        get :show, id: feed.name
+        get :show, params: { id: feed.name }
 
         WebMock.should_not have_requested(:get, feed.url)
       end
@@ -47,7 +47,7 @@ describe FeedsController do
       before { feed.update_attributes(contents: nil) }
 
       it 'should reload the feed' do
-        get :show, id: feed.name
+        get :show, params: { id: feed.name }
 
         WebMock.should have_requested(:get, feed.url)
       end
@@ -56,7 +56,7 @@ describe FeedsController do
         before { stub_request(:get, feed.url).to_return(body: 'foo') }
 
         it 'should return feed body' do
-          get :show, id: feed.name
+          get :show, params: { id: feed.name }
 
           response.should be_success
           response.body.should == 'foo'
@@ -67,7 +67,7 @@ describe FeedsController do
         before { stub_request(:get, feed.url).to_return(status: 400) }
 
         it 'should return 404' do
-          get :show, id: feed.name
+          get :show, params: { id: feed.name }
 
           response.code.should == '404'
         end
@@ -78,7 +78,7 @@ describe FeedsController do
       before { @request.user_agent = 'MyApp/1.5 Sparkle/313' }
 
       it 'should save statistics based on GET parameters and user agent' do
-        get :show, id: feed.name, cpuType: '44'
+        get :show, params: { id: feed.name, cpuType: '44' }
 
         feed.statistics.detect { |s|
           s.date == Date.today && s.property.name == 'cpuType' && s.option.name == '44'
@@ -94,7 +94,7 @@ describe FeedsController do
       before { @request.user_agent = 'AppFresh/1.0.5 (909) (Mac OS X)' }
 
       it 'should not save any statistics' do
-        get :show, id: feed.name, cpuType: '44'
+        get :show, params: { id: feed.name, cpuType: '44' }
 
         feed.statistics.detect { |s| s.date == Date.today }.should be_nil
       end
@@ -104,7 +104,7 @@ describe FeedsController do
       let(:feed) { feeds(:inactive) }
 
       it 'should return ActiveRecord::RecordNotFound' do
-        expect { get :show, id: feed.name }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { get :show, params: { id: feed.name }}.to raise_error(ActiveRecord::RecordNotFound)
 
         WebMock.should_not have_requested(:get, feed.url)
       end
@@ -149,13 +149,13 @@ describe FeedsController do
     end
 
     it 'should reload the feed' do
-      post :reload, id: feed.name
+      post :reload, params: { id: feed.name }
 
       WebMock.should have_requested(:get, feed.url)
     end
 
     it 'should redirect to the index page' do
-      post :reload, id: feed.name
+      post :reload, params: { id: feed.name }
 
       response.should redirect_to(feeds_path)
     end
@@ -169,7 +169,7 @@ describe FeedsController do
       end
     end
 
-    it_should_require_admin { post :reload, id: feed.name }
+    it_should_require_admin { post :reload, params: { id: feed.name }}
   end
 
   describe '#new' do
@@ -192,19 +192,19 @@ describe FeedsController do
       end
 
       it 'should save the feed' do
-        post :create, feed: params
+        post :create, params: { feed: params }
 
         Feed.find_by_name(params[:name]).should_not be_nil
       end
 
       it 'should redirect to the index page' do
-        post :create, feed: params
+        post :create, params: { feed: params }
 
         response.should redirect_to(feeds_path)
       end
 
       it 'should load the feed' do
-        post :create, feed: params
+        post :create, params: { feed: params }
 
         WebMock.should have_requested(:get, new_url)
       end
@@ -212,24 +212,24 @@ describe FeedsController do
 
     context 'if feed is invalid' do
       it 'should render the new feed form again' do
-        post :create, feed: params.merge(title: '')
+        post :create, params: { feed: params.merge(title: '') }
 
         response.should render_template(:new)
       end
     end
 
-    it_should_require_admin { post :create, feed: params }
+    it_should_require_admin { post :create, params: { feed: params }}
   end
 
   describe '#edit' do
     it 'should load an edit form' do
-      get :edit, id: feed.name
+      get :edit, params: { id: feed.name }
 
       response.should be_success
       response.should render_template(:edit)
     end
 
-    it_should_require_admin { get :edit, id: feed.name }
+    it_should_require_admin { get :edit, params: { id: feed.name }}
   end
 
   describe '#update' do
@@ -240,7 +240,7 @@ describe FeedsController do
       end
 
       it 'should save the feed' do
-        patch :update, id: feed.name, feed: { name: 'foo' }
+        patch :update, params: { id: feed.name, feed: { name: 'foo' }}
 
         feed.reload
 
@@ -248,7 +248,7 @@ describe FeedsController do
       end
 
       it 'should redirect to the index page' do
-        patch :update, id: feed.name, feed: { name: 'foo' }
+        patch :update, params: { id: feed.name, feed: { name: 'foo' }}
 
         response.should redirect_to(feeds_path)
       end
@@ -258,7 +258,7 @@ describe FeedsController do
           stub_request(:get, new_url)
           old_url = feed.url
 
-          patch :update, id: feed.name, feed: { url: new_url }
+          patch :update, params: { id: feed.name, feed: { url: new_url }}
 
           WebMock.should_not have_requested(:get, old_url)
           WebMock.should have_requested(:get, new_url)
@@ -267,7 +267,7 @@ describe FeedsController do
 
       context 'if url was not changed' do
         it 'should not reload the feed' do
-          patch :update, id: feed.name, feed: { name: 'foo' }
+          patch :update, params: { id: feed.name, feed: { name: 'foo' }}
 
           WebMock.should_not have_requested(:get, feed.url)
         end
@@ -276,12 +276,12 @@ describe FeedsController do
 
     context 'if feed is invalid' do
       it 'should render the edit form again' do
-        patch :update, id: feed.name, feed: { name: '' }
+        patch :update, params: { id: feed.name, feed: { name: '' }}
 
         response.should render_template(:edit)
       end
     end
 
-    it_should_require_admin { patch :update, id: feed.name, feed: { name: 'foo' }}
+    it_should_require_admin { patch :update, params: { id: feed.name, feed: { name: 'foo' }}}
   end
 end
