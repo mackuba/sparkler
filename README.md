@@ -256,7 +256,7 @@ There's one caveat you need to remember about: the webapp caches the appcast fil
 
 To fix this, you need to remember to go to the feeds index page on your Sparkler site and press the "Reload data" link under the given feed:
 
-![](http://i.imgur.com/wd8gL0j.png)
+<img src="http://i.imgur.com/6bLOs6c.png" width="271">
 
 ## Updating Sparkler
 
