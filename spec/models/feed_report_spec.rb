@@ -85,7 +85,7 @@ describe FeedReport do
     report.reports.first[:show_other].should == false
   end
 
-  it 'should calculate list of months with any statistics for the given feed' do
+  it 'should calculate list of months with any statistics for the given feed, including empty months' do
     saver.save_param(Date.new(2015, 1, 3), 'color', 'red')
     saver.save_param(Date.new(2015, 3, 3), 'color', 'blue')
     saver.save_param(Date.new(2015, 3, 3), 'color', 'red')
@@ -94,7 +94,7 @@ describe FeedReport do
 
     report = FeedReport.new(feed, report_types: { 'Foo' => { field: 'color' }})
 
-    report.reports.first[:months].should == ['2015-01', '2015-03', '2015-06']
+    report.reports.first[:months].should == ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06']
   end
 
   describe ':initial_range' do
@@ -148,11 +148,11 @@ describe FeedReport do
       saver.save_param(Date.new(2015, 2, 1), 'value', 'iMac')
       saver.save_param(Date.new(2015, 4, 3), 'value', 'MacBook')
 
-      subject.detect { |l| l[:title] == 'iMac' }[:amounts].should == [5, 1, 0]
-      subject.detect { |l| l[:title] == 'MacBook' }[:amounts].should == [1, 0, 1]
+      subject.detect { |l| l[:title] == 'iMac' }[:amounts].should == [5, 1, 0, 0]
+      subject.detect { |l| l[:title] == 'MacBook' }[:amounts].should == [1, 0, 0, 1]
 
-      subject.detect { |l| l[:title] == 'iMac' }[:normalized].should == [83.3, 100.0, 0.0]
-      subject.detect { |l| l[:title] == 'MacBook' }[:normalized].should == [16.7, 0.0, 100.0]
+      subject.detect { |l| l[:title] == 'iMac' }[:normalized].should == [83.3, 100.0, 0.0, 0.0]
+      subject.detect { |l| l[:title] == 'MacBook' }[:normalized].should == [16.7, 0.0, 0.0, 100.0]
     end
 
     it "should delete options that don't have any non-zero amounts" do

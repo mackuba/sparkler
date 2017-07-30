@@ -1,6 +1,4 @@
 class FeedReport
-  YM_FORMAT = "DATE_FORMAT(date, '%Y-%m')"
-
   attr_reader :reports
   cattr_accessor :report_types
 
@@ -9,7 +7,7 @@ class FeedReport
     @report_types = options[:report_types] || self.class.report_types
 
     @feed = feed
-    @months = feed.statistics.select("DISTINCT #{YM_FORMAT} AS ym").order('ym').map(&:ym)
+    @months = generate_months(feed.statistics)
     @properties = Property.all.includes(:options).to_a
 
     calculate_counts
@@ -17,11 +15,27 @@ class FeedReport
     generate_reports
   end
 
+  def generate_months(collection)
+    return [] if collection.count == 0
+
+    date = collection.order('date').first.date
+    end_date = collection.order('date').last.date
+    months = []
+
+    loop do
+      break if date > end_date
+      months << date.strftime("%Y-%m")
+      date = date.next_month
+    end
+
+    months
+  end
+
   def calculate_counts
     @counts = {}
 
     grouped_statistics = @feed.statistics
-      .select("#{YM_FORMAT} AS ym, property_id, option_id, SUM(counter) AS total_for_month")
+      .select("DATE_FORMAT(date, '%Y-%m') AS ym, property_id, option_id, SUM(counter) AS total_for_month")
       .group("ym, property_id, option_id")
 
     grouped_statistics.each do |stat|
