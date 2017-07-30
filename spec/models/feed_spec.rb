@@ -6,12 +6,14 @@ describe Feed do
   let(:feed) { Feed.first }
   let(:last_version) { '2.0' }
   let(:xml) { %(
-     <item>
-       <enclosure url="blblblb" sparkle:version="#{last_version}" />
-     </item>
-     <item>
-       <enclosure url="blblblb" sparkle:version="0.1" />
-     </item>
+    <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+      <item>
+        <enclosure url="blblblb" sparkle:version="#{last_version}" />
+      </item>
+      <item>
+        <enclosure url="blblblb" sparkle:version="0.1" />
+      </item>
+    </rss>
   )}
 
   describe '#load_contents' do
@@ -67,12 +69,14 @@ describe Feed do
 
     context 'if items include both version and build number' do
       let(:xml) { %(
-         <item>
-           <enclosure url="blblblb" sparkle:version="111" sparkle:shortVersionString="#{last_version}" />
-         </item>
-         <item>
-           <enclosure url="blblblb" sparkle:version="222" sparkle:shortVersionString="0.1" />
-         </item>
+        <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+          <item>
+            <enclosure url="blblblb" sparkle:version="111" sparkle:shortVersionString="#{last_version}" />
+          </item>
+          <item>
+            <enclosure url="blblblb" sparkle:version="222" sparkle:shortVersionString="0.1" />
+          </item>
+        </rss>
       )}
 
       it 'should take the short version string' do
@@ -81,6 +85,55 @@ describe Feed do
         feed.load_contents
 
         feed.last_version.should == last_version
+      end
+    end
+
+    context 'if items include version string in a <sparkle:version> tag' do
+      let(:xml) { %(
+        <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+          <item>
+            <sparkle:version>#{last_version}</sparkle:version>
+          </item>
+          <item>
+            <sparkle:version>0.1</sparkle:version>
+          </item>
+        </rss>
+      )}
+
+      it 'should parse the version correctly' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        feed.load_contents
+
+        feed.last_version.should == last_version
+      end
+    end
+
+    context "if the feed doesn't contain any items" do
+      let(:xml) { "" }
+
+      it 'should not raise any errors' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        expect { feed.load_contents }.not_to raise_error
+
+        feed.contents.should == ""
+      end
+
+      it 'should not set the error property' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        feed.load_contents
+
+        feed.load_error.should be_nil
+      end
+
+      it 'should set last_version to nil' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        feed.load_contents
+
+        feed.last_version.should be_nil
       end
     end
 
@@ -112,6 +165,32 @@ describe Feed do
       end
     end
 
+    context "if the feed doesn't include sparkle namespace" do
+      let(:xml) { %(
+        <rss>
+          <item>
+            <sparkle:version>#{last_version}</sparkle:version>
+          </item>
+          <item>
+            <sparkle:version>0.1</sparkle:version>
+          </item>
+        </rss>
+      )}
+
+      it 'should not raise an exception' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        expect { feed.load_contents }.not_to raise_error
+      end
+
+      it 'should set the error property' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        feed.load_contents
+
+        feed.load_error.should_not be_nil
+      end
+    end
   end
 
   describe '#load_if_needed' do

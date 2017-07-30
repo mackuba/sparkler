@@ -39,7 +39,7 @@ class Feed < ApplicationRecord
     self.last_version = version_from_contents(text)
     self.load_error = nil
     save!
-  rescue OpenURI::HTTPError, RuntimeError, SocketError, SystemCallError => error
+  rescue OpenURI::HTTPError, RuntimeError, SocketError, SystemCallError, Nokogiri::XML::XPath::SyntaxError => error
     logger.error "Couldn't download feed from #{url}: #{error}"
 
     self.load_error = error
@@ -57,7 +57,14 @@ class Feed < ApplicationRecord
   def version_from_contents(contents)
     xml = Nokogiri::XML(contents)
     first_item = xml.css('item').first
-    enclosure = first_item && first_item.css('enclosure').first
-    enclosure && (enclosure['sparkle:shortVersionString'] || enclosure['sparkle:version'])
+    return nil unless first_item
+
+    if version = first_item.css('sparkle|version').first
+      version.text
+    elsif enclosure = first_item.css('enclosure').first
+      enclosure['sparkle:shortVersionString'] || enclosure['sparkle:version']
+    else
+      nil
+    end
   end
 end
