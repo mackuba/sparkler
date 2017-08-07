@@ -74,7 +74,7 @@ class FeedsController < ApplicationController
   end
 
   def require_admin_or_reload_key
-    require_admin unless request.headers['X_RELOAD_KEY'] == RELOAD_KEY
+    require_admin unless request.headers['HTTP_X_RELOAD_KEY'] == RELOAD_KEY
   end
 
   def request_from_sparkle?
