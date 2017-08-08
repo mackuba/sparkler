@@ -1,4 +1,4 @@
-Copyright (c) 2015 Jakub Suder
+Copyright (c) 2017 Jakub Suder
 
 You can modify, distribute and use this software for any purpose without any
 restrictions as long as you keep this copyright notice intact. The software is
