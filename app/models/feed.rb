@@ -56,12 +56,14 @@ class Feed < ApplicationRecord
 
   def version_from_contents(contents)
     xml = Nokogiri::XML(contents)
-    first_item = xml.css('item').first
-    return nil unless first_item
+    versions = xml.css('item').map { |item| version_from_item(item) }.compact
+    versions.map { |v| Gem::Version.new(v) }.sort.reverse.first.try(:to_s)
+  end
 
-    if version = first_item.css('sparkle|version').first
+  def version_from_item(item)
+    if version = item.css('sparkle|version').first
       version.text
-    elsif enclosure = first_item.css('enclosure').first
+    elsif enclosure = item.css('enclosure').first
       enclosure['sparkle:shortVersionString'] || enclosure['sparkle:version']
     else
       nil

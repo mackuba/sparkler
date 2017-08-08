@@ -137,6 +137,27 @@ describe Feed do
       end
     end
 
+    context 'if the versions are not sorted newest to oldest' do
+      let(:xml) { %(
+        <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+          <channel>
+            <item><enclosure sparkle:version="1.0.0.rc.1" url="link"/></item>
+            <item><enclosure sparkle:version="1.0.0" url="link"/></item>
+            <item><enclosure sparkle:version="1.7" url="link"/></item>
+            <item><enclosure sparkle:version="1.4.1" url="link"/></item>
+          </channel>
+        </rss>
+      )}
+
+      it 'should find the newest release on the list' do
+        stub_request(:get, feed.url).to_return(body: xml)
+
+        feed.load_contents
+
+        feed.last_version.should == '1.7'
+      end
+    end
+
     context "if feed can't be loaded" do
       it 'should not raise an exception' do
         stub_request(:get, feed.url).to_raise(SocketError)
