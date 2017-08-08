@@ -11,6 +11,7 @@ set :deploy_to, '/var/www/sparkle'
 
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret_key_base.key')
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'public/assets', 'public/system')
+set :optional_symlinks, ['config/reload_key.key']
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -30,3 +31,20 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'public/assets
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+after "deploy:symlink:linked_dirs", :optional_symlinks do
+  on release_roles :all do |host|
+    fetch(:optional_symlinks, []).each do |file|
+      target = release_path.join(file)
+      source = shared_path.join(file)
+
+      if test("[ -f #{source} ]")
+        next if test "[ -L #{target} ]"
+        execute :rm, target if test "[ -f #{target} ]"
+        execute :ln, "-s", source, target
+      else
+        info "Skipping optional symlink #{file}"
+      end
+    end
+  end
+end
