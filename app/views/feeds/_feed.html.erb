@@ -1,7 +1,8 @@
 <h2><%= feed.title %></h2>
 
 <% if feed.active? %>
-  <p>URL: <%= link_to feed_url(feed), feed %></p>
+  <p>Feed URL: <%= link_to feed_url(feed), feed %></p>
+  <p>Source: <%= feed.url.include?('://') ? link_to(feed.url, feed.url) : feed.url %></p>
 
   <p>
     Stats access:
