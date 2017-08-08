@@ -4,13 +4,13 @@ Important changes:
 
 * updated Rails to version 5.1
 * Ruby 2.2.2 or newer is required
-* feed can be reloaded by calling an API endpoint, authenticating with an `X-Reload-Key` HTTP header (from [CocoaPods fork](https://github.com/CocoaPods/sparkler/pull/3))
+* feed can be reloaded by calling an API endpoint, authenticating with an `X-Reload-Key` HTTP header (from the [CocoaPods fork](https://github.com/CocoaPods/sparkler/pull/3))
 
 Other changes:
 
-- feed items that specify version using an alternate `<sparkle:version>` tag are properly parsed (https://github.com/mackuba/sparkler/issues/4)
-- feed parser always finds the version with the highest version number, even if it's not the first item on the list (from [CocoaPods fork](https://github.com/CocoaPods/sparkler/pull/5))
-- charts will now include a full range of months from the first to the last recorded data point, including months with no data (https://github.com/mackuba/sparkler/issues/3)
+- feed items that specify version using an alternate `<sparkle:version>` tag are properly parsed ([#4](https://github.com/mackuba/sparkler/issues/4))
+- feed parser always finds the version with the highest version number, even if it's not the first item on the list (from the [CocoaPods fork](https://github.com/CocoaPods/sparkler/pull/5))
+- charts will now include a full range of months from the first to the last recorded data point, including months with no data ([#3](https://github.com/mackuba/sparkler/issues/3))
 - renamed "OS X Version" chart to "macOS Version" and "Mac Model" to "Popular Mac Models"
 - showing feed source URL on the index page
 - larger fonts on the statistics page
