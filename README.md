@@ -258,6 +258,23 @@ To fix this, you need to remember to go to the feeds index page on your Sparkler
 
 <img src="http://i.imgur.com/6bLOs6c.png" width="271">
 
+#### Reloading through the API
+
+Alternatively, you can set up an automated way of reloading the feed by calling the `reload` API endpoint.
+
+To do that, you need to configure a reload key for authenticating to that endpoint. There are two ways to do this:
+
+- configure an `X_RELOAD_KEY` environment variable
+- create a `config/reload_key.key` file containing the key (Capistrano deploy will symlink it from the `shared/config` folder as with `database.yml` and `secret_key_base.key`, if it exists there)
+
+In development mode, the key is set to `"reloadme!"` (see `config/secrets.yml`).
+
+When the key is configured, you can trigger a reload by making a request to `reload`, e.g.:
+
+    curl -I http://localhost:3000/feeds/myapp/reload -H "X-Reload-Key: reloadme!"
+
+You can do this e.g. from your CI or a deployment script used for releasing your Mac app.
+
 ## Updating Sparkler
 
 From time to time Rails releases updated versions that fix some security issues. I'll try to update Sparkler quickly when that happens, but in any case, I'd recommend that you follow [@rails](https://twitter.com/rails) on Twitter so that you don't miss that (or alternatively, you can subscribe to the [Rails Security mailing list](https://groups.google.com/forum/#!forum/rubyonrails-security)).
