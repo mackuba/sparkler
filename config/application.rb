@@ -17,7 +17,7 @@ Bundler.require(*Rails.groups)
 
 module Sparkler
   class Application < Rails::Application
-    VERSION = '1.1'
+    VERSION = '1.2'
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
