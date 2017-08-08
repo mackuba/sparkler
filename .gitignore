@@ -6,6 +6,7 @@ Gemfile.deploy*
 config/database.yml
 config/deploy.rb
 config/deploy
+config/*.key
 deploy/bin
 log
 tmp
