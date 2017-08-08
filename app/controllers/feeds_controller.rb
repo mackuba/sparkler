@@ -1,7 +1,8 @@
 class FeedsController < ApplicationController
   before_action :set_feed, only: [:reload, :edit, :update]
   before_action :set_active_feed, only: [:show]
-  before_action :require_admin, except: [:show]
+  before_action :require_admin, except: [:show, :reload]
+  before_action :require_admin_or_reload_key, only: [:reload]
 
   def index
     @feeds = Feed.order('inactive, title')
@@ -69,6 +70,11 @@ class FeedsController < ApplicationController
 
   def set_active_feed
     @feed = Feed.active.find_by_name!(params[:id])
+  end
+
+  def require_admin_or_reload_key
+    reload_key = Rails.application.secrets.reload_key
+    require_admin unless reload_key.present? && request.headers['HTTP_X_RELOAD_KEY'] == reload_key
   end
 
   def request_from_sparkle?

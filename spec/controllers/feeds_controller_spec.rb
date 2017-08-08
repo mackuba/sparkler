@@ -149,27 +149,89 @@ describe FeedsController do
     end
 
     it 'should reload the feed' do
-      post :reload, params: { id: feed.name }
+      get :reload, params: { id: feed.name }
 
       WebMock.should have_requested(:get, feed.url)
     end
 
     it 'should redirect to the index page' do
-      post :reload, params: { id: feed.name }
+      get :reload, params: { id: feed.name }
 
       response.should redirect_to(feeds_path)
     end
 
     context 'if request was made with XHR' do
       it 'should return a rendered feed partial instead' do
-        post :reload, params: { id: feed.name}, xhr: true
+        get :reload, params: { id: feed.name}, xhr: true
 
         response.should be_success
         response.should render_template('_feed')
       end
     end
 
-    it_should_require_admin { post :reload, params: { id: feed.name }}
+    context 'if user is not logged in', type: :request do
+      before { session.delete(:logged_in) }
+
+      it 'should redirect to the login page' do
+        get "/feeds/#{feed.name}/reload"
+
+        response.should redirect_to('/user/login_form')
+      end
+
+      it 'should not reload the feed' do
+        get "/feeds/#{feed.name}/reload"
+
+        WebMock.should_not have_requested(:get, feed.url)
+      end
+
+      context 'if a correct reload key is passed' do
+        before { Rails.application.secrets.stub(reload_key: 'qwerty') }
+
+        it 'should redirect to the index page' do
+          get "/feeds/#{feed.name}/reload", headers: { 'X-Reload-Key': 'qwerty' }
+
+          response.should redirect_to(feeds_path)
+        end
+
+        it 'should reload the feed' do
+          get "/feeds/#{feed.name}/reload", headers: { 'X-Reload-Key': 'qwerty' }
+
+          WebMock.should have_requested(:get, feed.url)
+        end
+      end
+
+      context 'if an incorrect reload key is passed' do
+        before { Rails.application.secrets.stub(reload_key: 'qwerty') }
+
+        it 'should redirect to the login page' do
+          get "/feeds/#{feed.name}/reload", headers: { 'X-Reload-Key': 'asdf' }
+
+          response.should redirect_to('/user/login_form')
+        end
+
+        it 'should not reload the feed' do
+          get "/feeds/#{feed.name}/reload", headers: { 'X-Reload-Key': 'asdf' }
+
+          WebMock.should_not have_requested(:get, feed.url)
+        end
+      end
+
+      context 'if reload key is not passed and not set in the settings' do
+        before { Rails.application.secrets.stub(reload_key: nil) }
+
+        it 'should redirect to the login page' do
+          get "/feeds/#{feed.name}/reload"
+
+          response.should redirect_to('/user/login_form')
+        end
+
+        it 'should not reload the feed' do
+          get "/feeds/#{feed.name}/reload"
+
+          WebMock.should_not have_requested(:get, feed.url)
+        end
+      end
+    end
   end
 
   describe '#new' do
