@@ -35,7 +35,7 @@ When you have that working, you need to release an update to your app that point
 
 To install Sparkler on your server, you need a few other things there first:
 
-- Ruby 2.2.2 or newer
+- Ruby 2.3 or newer
 - an HTTP server (Nginx/Apache)
 - a Ruby/Rails app server
 - a MySQL database
@@ -44,7 +44,7 @@ If you already have these set up or you know how to install them, you can skip t
 
 ### Ruby
 
-Any recent Linux distribution will usually include some version of Ruby by default. However, it's possible that it's an older version of Ruby like 1.8 or 1.9. Rails 5 requires Ruby 2.2.2 or newer.
+Any recent Linux distribution will usually include some version of Ruby by default. However, it's possible that it's an older version of Ruby like 1.8 or 1.9. Rails 5 requires Ruby 2.2.2 or newer, but versions lower than 2.3 aren't maintained anymore.
 
 Check which version you have:
 
