@@ -77,7 +77,7 @@ GEM
       mini_portile2 (~> 2.3.0)
     open_uri_redirections (0.2.1)
     public_suffix (2.0.5)
-    rack (2.0.6)
+    rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.1.6.1)
